@@ -1,7 +1,7 @@
 # PetAdoption
 A system with classes for pets, shelters, and adopters, facilitating pet searches, adoption processes, and shelter management.
 
-# Projects Functional Requirements
+# Functional Requirements
 - User Account Management: Users can create and manage their accounts;
 - Adoption Application Processing: Handling and processing adoption applications;
 - Search and Filter Options: Enabling users to search and filter pets based on various criteria;
