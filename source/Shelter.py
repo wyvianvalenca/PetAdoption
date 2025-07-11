@@ -7,7 +7,7 @@ class Shelter(User):
     def __init__(self, username: str, id: int, name: str, address: str,
                  description: str | None):
         super().__init__(username, id)
-        
+
         self.name: str = name
         self.address: str = address
         self.description: str | None = description
@@ -16,7 +16,7 @@ class Shelter(User):
         self._pixKeyValue: str | None = None
 
         self._petTypes: dict[str:List[str]] = {}
-        
+
         self._pets: List[Pet] = []
         self._events: List = []
 
@@ -37,12 +37,12 @@ class Shelter(User):
             self.petTypes[pet.animalGroup].append(pet.breed)
             return f"[OK] {pet.name} added to {self.name}"
         else:
-            return f"[FAIL] {self.name} does not accept {pet.animalGroup} yet."
+            return f"[FAIL] {self.name} does not shelters {pet.animalGroup} yet."
 
     def showPets(self):
         for pet in self.pets:
             print(f"[{pet.id}] - {pet.name}, {pet.animalGroup}, {pet.breed}")
-    
+
     # events methods
 
     def showShelter(self):

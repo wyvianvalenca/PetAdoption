@@ -1,17 +1,17 @@
+from User import User
+
 class Adopter(User):
-    def __init__(self, username: str, id: int)__:
-        super().__init(username, id)
+    def __init__(self, username: str, id: int):
+        super().__init__(username, id)
         self.age: int | None = None
         self.descripion: str | None = None
-        self.applications: List = []
-        self.successStories: List = []
-        self.forumPosts: List = []
+        self._applications: List = []
+        self._successStories: List = []
+        self._forumPosts: List = []
 
-    def updateProfile(age: int):
-        self.age = age
-
-    def updateProfile(description: str):
-        self.description = description
+    @property
+    def applications(self):
+        return self._applications
 
     def searchPets():
         pass
@@ -22,10 +22,6 @@ class Adopter(User):
     def searchEvents():
         pass
 
-    def viewFeed():
-        pass
-
     def viewApplications(self):
         for application in self.applications:
             print(f"")
-

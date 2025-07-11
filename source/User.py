@@ -3,8 +3,10 @@ class User:
         self._username: str = username
         self._id: int = id
 
-    @property username(self):
+    @property
+    def username(self) -> str:
         return self._username
 
-    @property id(self):
+    @property
+    def id(self) -> int:
         return self._id
