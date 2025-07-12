@@ -1,10 +1,8 @@
-from typing import List
-
-from User import User
-from Pet import Pet
+from source.users.user import User
+from source.users.pet import Pet, STATUS_LIST
 
 class Shelter(User):
-    def __init__(self, username: str, id: int, name: str, address: str,
+    def __init__(self, id: int, username: str, name: str, address: str,
                  description: str | None):
         super().__init__(username, id)
 
@@ -15,20 +13,22 @@ class Shelter(User):
         self._pixKeyType: str | None = None
         self._pixKeyValue: str | None = None
 
-        self._petTypes: dict[str:List[str]] = {}
+        self._petTypes: dict[str, list[str]] = {}
 
-        self._pets: List[Pet] = []
-        self._events: List = []
+        self._pets: list[Pet] = []
+        self._events: list = []
+
+        self.allowedPosts.extend(["Forum", "Educational"])
 
     @property
-    def petTypes(self) -> dict[str:List[str]]:
+    def petTypes(self) -> dict[str, list[str]]:
         return self._petTypes
 
     def addPetTypes(self, petType: str) -> None:
         self.petTypes[petType] = []
 
     @property
-    def pets(self) -> List[Pet]:
+    def pets(self) -> list[Pet]:
         return self._pets
 
     def addPet(self, pet: Pet) -> str:
@@ -41,7 +41,7 @@ class Shelter(User):
 
     def showPets(self):
         for pet in self.pets:
-            print(f"[{pet.id}] - {pet.name}, {pet.animalGroup}, {pet.breed}")
+            print(f"[{pet.name}] - {pet.animalGroup}, {pet.breed}")
 
     # events methods
 

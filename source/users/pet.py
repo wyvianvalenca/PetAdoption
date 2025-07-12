@@ -1,11 +1,15 @@
-# import config
-from User import User
+from source.users.user import User
+
+STATUS_LIST: list[str] = [
+    "Rescued",
+    "In treatment",
+    "Available for adoption",
+    "Adopted"
+]
 
 class Pet:
-    def __init__(self, id: int, name: str, animalGroup: str,
+    def __init__(self, name: str, animalGroup: str,
                  breed: str | None, furColor: str | None):
-        self._id: int = id
-
         self.name: str = name
         self.description: str | None = None
         self.age: int | None = None
@@ -13,18 +17,15 @@ class Pet:
         self._animalGroup: str = animalGroup
         self.breed: str | None = breed
         self.furColor: str | None = furColor
+        self.age: int | None = None
 
         self._status: str = 'Rescued'
 
         self.houseType: str | None = None
         self.coexistsOtherPets: bool = False
 
-        self.applications: List = []
+        self.applications: dict[User, int] = {}
         self._tutor: User | None = None
-
-    @property
-    def id(self) -> int:
-        return self._id
 
     @property
     def animalGroup(self) -> str:
@@ -35,6 +36,6 @@ class Pet:
         return self._status
 
     @status.setter
-    def setter(self, value) -> None:
-        if value in config.STATUS_LIST:
-            self.status = value
+    def setter(self, value: str) -> None:
+        if value in STATUS_LIST:
+            self._status = value
