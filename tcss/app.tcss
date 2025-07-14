@@ -1,0 +1,95 @@
+/* GLOBALS */
+
+Screen {
+	align: center middle;
+}
+
+Static {
+	text-align: center;
+}
+
+.secondary {
+	background: $secondary;
+}
+
+/* ChooseRole */
+
+#role-container {
+	background: $surface;
+	width: 50%;
+	height: 30%;
+	border: round $primary;
+	layout: grid;
+	grid-size: 2 2;
+	align: center bottom;
+}
+
+#role-container Label {
+	margin: 2;
+	text-align: center;
+	column-span: 2;
+	width: 1fr;
+}
+
+#role-container Button {
+	margin: 2;
+	width: 1fr;
+}
+
+/* Main App */
+
+PetApp Screen {
+	background: $primary;
+}
+
+PetApp Container {
+	background: $background;
+	border: round $secondary;
+	width: 65%;
+	height: auto;
+	layout: vertical;
+	align-horizontal: center;
+}
+
+PetApp .two-options {
+	width: auto;
+	height: auto;
+	align: center middle;
+}
+
+.two-options Button {
+    margin: 1 3;
+    width: 1fr;
+}
+
+#welcome {
+	width: 1fr;
+	background: $background;
+}
+
+/* LOGIN */
+
+#login-container {
+	align: center middle;
+    layout: vertical;
+    width: 50%;
+    height: auto;
+    margin: 2;
+	padding: 1;
+    border: round $primary;
+    background: $surface;
+}
+
+#login-container Label {
+    margin-bottom: 1;
+    text-style: bold;
+}
+
+#login-container Input {
+    margin-bottom: 1;
+}
+
+#login-container Button {
+	margin: 1;
+	width: 1fr;
+}
