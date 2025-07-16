@@ -1,149 +1,272 @@
-from textual import on
-from textual.app import App, ComposeResult
-from textual.reactive import reactive
-from textual.screen import Screen, ModalScreen
-from textual.containers import Container, HorizontalGroup, Center
-from textual.widgets import (
-        Markdown, 
-        Static, 
-        Label, 
-        Button,
-        Input,
-        Footer, 
-        Header
-)
-
-from source.users.user import User
+from audioop import add
+from multiprocessing import Event
+from source.queries.search_pet import search_pets
+from source.socials.feed import Feed
 from source.users.accounts import Accounts
+from source.users.adopter import Adopter
+from source.users.pet import Pet
+from source.users.shelter import Shelter
+from source.users.user import User
 
-WELCOME_MD = """\
-# Welcome to PetAdoption!
+accounts = Accounts()
+feed = Feed()
 
-Your journey to finding a new best friend starts here. Our platform connects loving homes with pets in need, making the adoption process seamless and joyful.
+def shelter_menu(user: Shelter):
+    print(f"\nWelcome, {user.name}!")
+    print("[1] - Update Profile")
+    print("[2] - Create Events")
+    print("[3] - Add Pet Type")
+    print("[4] - Register New Pet")
+    print("[4a] - Update Pet")
+    print("[5] - View Adoption Applications")
+    print("[6] - Create Post")
+    print("[7] - View Social Feed")
+    print("[b] - Return to main menu")
 
-Explore detailed pet profiles, discover local shelters and events, and connect with a community of fellow pet lovers.
+    while True:
+        response = input("\nChoose an option: ")
+        if response == "b":
+            return 0;
 
-***
+        elif response == "1":
+            print("\nLet's Update your profile!")
+            user.showShelter()
+            print("If you don't want to update something, just leave it blank")
 
-_Let's find a forever home for every pet._
-"""
+            name = input("New Name: ")
+            if name:
+                user.name = name
 
-class Login(Screen[User]):
-    def __init__(self, user_type: str, accounts: Accounts, **kwargs) -> None:
-        super().__init__(**kwargs)
-        self.user_type: str = user_type
-        self.accounts: Accounts = accounts
+            description = input("New Description: ")
+            if description:
+                user.description = description
 
-    def compose(self) -> ComposeResult:
-        yield Header()
-        with Container(id="login-container"):
-            with Center():
-                yield Label(f"Login as {self.user_type}")
-            with Center():
-                yield Input(placeholder="Enter your username", id="username")
-            with HorizontalGroup():
-                yield Button("Login", variant="primary", id="login")
-                yield Button("Cancel", variant="error", id="close")
-        yield Footer()
+            address = input("New Address: ")
+            if address:
+                user.address = address
 
-    @on(Button.Pressed, "#login")
-    def handle_login(self, event:Button.Pressed) -> None:
-        _ = event.stop()
-        username_input = self.query_one("#username", Input)
-        username = username_input.value
+            pix_type = input("New Pix Type: ")
+            if pix_type:
+                user._pixKeyType = pix_type
 
-        if not username:
-            self.notify("Username can't be empty")
-            return
+            pix_value = input("New Pix Value: ")
+            if pix_value:
+                user._pixKeyValue = pix_value
 
-        # Roda a função de login do arquivo accounts.py
-        logged_user = self.accounts.login(self.user_type, username)
+            print("\nGreat! Here's your new profile!")
+            user.showShelter()
 
-        if logged_user:
-            # Retorna o usuário logado com sucesso
-            self.dismiss(logged_user)
+        elif response == "2":
+            print("\nLet's create an event!")
+            name = input("Name: ")
+            date = input("Date: ")
+            location = input("Location: ")
+
+            event = Event(name, date, location)
+            user.addEvent(event)
+            print("[OK] Event created!")
+
+        elif response == "3":
+            petType = input("\nPet Type: ")
+            user.addPetTypes(petType)
+
+        elif response == "4":
+            print("\n Let's register a new pet!")
+            pet_name = input("Name: ")
+            pet_type = input("Type (species): ")
+            pet_breed = input("Breed: ")
+            pet_furColor = input("Fur Color: ")
+            pet = Pet(pet_name, pet_type, pet_breed, pet_furColor)
+            print(user.addPet(pet))
+
+        elif response == "4a":
+            print("\nLet's update a pet!")
+            name = input("Pet Name: ")
+            
+            choosen = False
+            for pet in users.pets:
+                if name == pet.name:
+                    choosen = pet
+                    choosen.showPet()
+                    break
+
+            if choosen == False:
+                print("Pet not found.")
+                continue
+            
+            print("If you don't want to update something, just leave it blank")
+
+            name = input("Name: ")
+            if name:
+                choosen.name = name
+
+            description = input("Description: ")
+            if description:
+                choosen.description = description
+
+            print(f"\nGreat! Here's {choosen.name}'s new profile!")
+            choosen.showShelter()
+
+        elif response == "5":
+            pass
+
+        elif response == "6":
+
+            print("\nLet's add a post! First, choose the type.")
+            for i in range(1, len(user.allowedPosts)):
+                print(f"[{i}] - {user.allowedPosts[i]}")
+            post_type = user.allowedPosts[int(input("Choose an option: "))]
+            title = input("Title: ")
+            content = input("Content: ")
+
+            if feed.create_post(user, post_type, title, content):
+                print("[OK] Post created")
+            else:
+                print("[FAIL] You can't post that.")
+
+        elif response == "7":
+            feed.view_feed()
+
         else:
-            # Mostra erro se o usuário não for encontrado
-            self.notify("User not found")
+            print("\nInvalid Option.\n")
 
-    @on(Button.Pressed, "#close")
-    def handle_close(self, event: Button.Pressed) -> None:
-        event.stop()
-        self.dismiss(None)
+def adopter_menu(user: Adopter):
+    print(f"\nWelcome, {user.name}!")
+    print("[1] - Update Profile")
+    print("[2] - View Events")
+    print("[3] - View Shelters")
+    print("[4] - View Pets")
+    print("[5] - View Adoption Applications")
+    print("[6] - Create Post")
+    print("[7] - View Social Feed")
+    print("[b] - Return to main menu")
 
-class ChooseRole(ModalScreen[str]):
-    
-    def compose(self) -> ComposeResult:
-        yield Header()
-        yield Container(
-            Label("How do you wanto to access the system?"),
-            Button("As an adopter", id="adopter", variant="primary"),
-            Button("As a shelter", id="shelter", variant="primary",
-                   classes="secondary"),
-            id="role-container"
-        )
+    while True:
+        response = input("\nChoose an option: ")
+        if response == "b":
+            return 0;
 
-    @on(Button.Pressed, "#adopter")
-    def handle_adopter(self, event: Button.Pressed) -> None:
-        event.stop()
-        self.dismiss("Adopter")
+        elif response == "1":
 
-    @on(Button.Pressed, "#shelter")
-    def handle_shelter(self, event: Button.Pressed) -> None:
-        event.stop()
-        self.dismiss("Shelter")
+            print("\nLet's Update your profile!")
+            print("If you don't want to update something, just leave it blank")
 
-class PetApp(App):
+            name = input("New Name: ")
+            if name:
+                user.name = name
+            
+            description = input("New Description: ")
+            if description:
+                user.description = description
 
-    CSS_PATH = "tcss/app.tcss"
-    BINDINGS = [
-        ("d", "toggle_dark", "Toggle Dark Mode"),
-    ]
-    SCREENS = {
-        "role": ChooseRole,
-        "login": Login
-    }
+            age = int(input("Age: "))
+            if age:
+                user.age = age
 
-    user: User | reactive[None] = reactive(None)
+        elif response == "4":
+            print("Let's find a pet! First, choose your filter!")
+            print("If you don't want to filter, leave it blank")
 
-    def __init__(self):
-        super().__init__()
-        self.accounts: Accounts = Accounts()
-        # Para teste: cria um usuário "adopter" com username "wyvian"
-        _ = self.accounts.create_user("Adopter", "wyvian", None, None, None)
+            shelter = input("Type a Shelter: ")
+            animal_group = input("Type a Animal Group: ")
+            breed = input("Type a breed: ")
+            color = input("Type a Fur Color: ")
+            age_min = int(input("Type a minimal age: "))
+            age_max = int(input("Type a maximal age: "))
 
-    def compose(self) -> ComposeResult:
-        yield Footer()
-        yield Header()
-        with Container():
-            md = Markdown(WELCOME_MD, id="welcome")
-            md.border_title = "PetApp"
-            yield md
-            with HorizontalGroup(classes="two-options"):
-                yield Button("Login", id="login", variant="primary")
-                yield Button("Sign Up", id="signup", variant="primary",
-                         classes="secondary")
+            filters = { }
+            filters['types'] = [animal_group]
+            filters['breeds'] = [breed]
+            filters['colors'] = [color]
+            filters['ageRange'] = [age_max]
 
-    def on_mount(self) -> None:
-        self.theme = "tokyo-night"
+            pets = search_pets(users, [shelter], filters)
 
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        def check_role(role: str) -> None:
-            if event.button.id == "login":
-                def check_login(user: User | None) -> None:
-                    self.user = user
+            for pet in pets:
+                pet.showPet()
 
-                self.push_screen(Login(role, self.accounts), check_login)
+        elif response == "6":
 
-        self.push_screen(ChooseRole(), check_role)
+            print("\nLet's add a post! First, choose the type.")
+            for i in range(1, len(user.allowedPosts)):
+                print(f"[{i}] - {user.allowedPosts[i]}")
+            post_type = user.allowedPosts[int(input("Choose an option: "))]
+            title = input("Title: ")
+            content = input("Content: ")
+
+            if feed.create_post(user, post_type, title, content):
+                print("[OK] Post created")
+            else:
+                print("[FAIL] You can't post that.")
+
+        elif response == "7":
+            feed.view_feed()
+
+        else:
+            print("\nInvalid Option.\n")
 
 
-    def action_toggle_dark(self) -> None:
-        self.theme = (
-            "tokyo-night" if self.theme == "textual-light" else "textual-light"
-        )
+
+def access(type: str) -> User | None:
+
+    print("\nCome on in!")
+    print("[1] - Login")
+    print("[2] - Create Account")
+    print("[b] - Return to main menu")
+    response = input("Choose an option: ")
+    while True:
+        if response == "b":
+            return None
+        elif response == "1":
+            username = input("Username: ")
+            user = accounts.login(type, username)
+            return user
+        elif response == "2":
+            username = input("Username: ")
+            name = input("Name: ")
+
+            if type == "Adopter":
+                user = accounts.create_user(type, username, name, None, None)
+            else:
+                address = input("Address: ")
+                description = input("Description: ")
+                user = accounts.create_user(type, username, name, address, description)
+
+            return user
+        else:
+            print("Invalid option.")
+
+
+
+def welcome():
+    while True:
+        print("\nWelcome! How do you want to access the system?")
+        print("[1] - Adopter")
+        print("[2] - Shelter")
+        print("[q] - Quit")
+        response = input("Choose an option: ")
+
+        if response == '1':
+            adopter = access("Adopter")
+
+            if adopter:
+                adopter_menu(adopter)
+            else: 
+                print("Access Failed! Try Again")
+        elif response == '2':
+            shelter = access("Shelter")
+
+            if shelter:
+                shelter_menu(shelter)
+            else: 
+                print("Access Failed! Try Again")
+        elif response == "q":
+            break
+        else:
+            print("Invalid option.")
+
+    print("Goodbye!")
 
 
 if __name__ == "__main__":
-    app = PetApp()
-    _ = app.run()
+    welcome()

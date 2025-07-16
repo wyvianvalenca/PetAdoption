@@ -48,10 +48,11 @@ class Post:
     def showPost(self):
             # Define uma borda para reutilização
             border = "─" * 50
-
             print(f"\n {border}\n",
                   f"TÍTULO: {self.title}\n",
                   f"por: @{self.author.username}\n",
+                  f"Tipo: {self.type}",
+
                   "-" * 30, "\n", 
                   self.content, "\n\n", 
                   f"💬 {len(self.comments)} comentários   ",

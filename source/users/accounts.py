@@ -14,7 +14,7 @@ class Accounts:
 
     # LOGIN / SIGNUP
 
-    def create_user(self, type: str, username: str, name: str | None, 
+    def create_user(self, type: str, username: str, name: str, 
                     address: str | None, description: str | None
                     ) -> User | None:
         if username in self.users[type]:
@@ -23,7 +23,7 @@ class Accounts:
         user: User
 
         if type == "Adopter":
-            user = Adopter(self.adopters_available_id, username)
+            user = Adopter(self.adopters_available_id, username, name)
             self.adopters_available_id += 1
 
         elif type == "Shelter":

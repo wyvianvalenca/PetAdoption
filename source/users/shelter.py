@@ -1,3 +1,4 @@
+from source.socials.event import Event
 from source.users.user import User
 from source.users.pet import Pet, STATUS_LIST
 
@@ -16,7 +17,7 @@ class Shelter(User):
         self._petTypes: dict[str, list[str]] = {}
 
         self._pets: list[Pet] = []
-        self._events: list = []
+        self._events: list[Event] = []
 
         self.allowedPosts.extend(["Forum", "Educational"])
 
@@ -43,7 +44,18 @@ class Shelter(User):
         for pet in self.pets:
             print(f"[{pet.name}] - {pet.animalGroup}, {pet.breed}")
 
-    # events methods
+    def addEvent(self, event: Event):
+        self._events.append(event)
+
+    def showEvents(self):
+        for event in self._events:
+            event.showEvent()
 
     def showShelter(self):
-        pass
+        print(f"\n{self.name.upper()}")
+        print(f"Description: {self.description}")
+        print(f"Address: {self.address}")
+        print(f"\nDONATION INFO")
+        print(f"Pix Type: {self._pixKeyType}")
+        print(f"Pix Key: {self._pixKeyValue}")
+        print("Pet Types Accepted:", self.petTypes)
