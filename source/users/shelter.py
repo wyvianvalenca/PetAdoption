@@ -3,59 +3,56 @@ from source.users.user import User
 from source.users.pet import Pet, STATUS_LIST
 
 class Shelter(User):
-    def __init__(self, id: int, username: str, name: str, address: str,
-                 description: str | None):
-        super().__init__(username, id)
+    def __init__(self, id: int, username: str, name: str):
+        super().__init__(username, id, name)
 
-        self.name: str = name
-        self.address: str = address
-        self.description: str | None = description
+        self.user_profile.update({
+            'address': None,
+            'donation type': None,
+            'donation code': None
+        })
 
-        self._pixKeyType: str | None = None
-        self._pixKeyValue: str | None = None
-
-        self._petTypes: dict[str, list[str]] = {}
-
+        self._pet_types: dict[str, list[str]] = {}
         self._pets: list[Pet] = []
         self._events: list[Event] = []
-
-        self.allowedPosts.extend(["Forum", "Educational"])
+        self.allowed_posts.extend(["Forum", "Educational"])
 
     @property
-    def petTypes(self) -> dict[str, list[str]]:
-        return self._petTypes
+    def pet_types(self) -> dict[str, list[str]]:
+        return self._pet_types
 
-    def addPetTypes(self, petType: str) -> None:
-        self.petTypes[petType] = []
+    def add_pet_type(self, petType: str) -> None:
+        self.pet_types[petType] = []
 
     @property
     def pets(self) -> list[Pet]:
         return self._pets
 
-    def addPet(self, pet: Pet) -> str:
-        if pet.animalGroup in self.petTypes:
+    def add_pet(self, pet: Pet) -> str:
+        if pet.animalGroup in self.pet_types:
             self.pets.append(pet)
-            self.petTypes[pet.animalGroup].append(pet.breed)
+            self.pet_types[pet.animalGroup].append(pet.breed)
             return f"[OK] {pet.name} added to {self.name}"
         else:
             return f"[FAIL] {self.name} does not shelters {pet.animalGroup} yet."
 
-    def showPets(self):
+    def print_pets(self):
         for pet in self.pets:
             print(f"[{pet.name}] - {pet.animalGroup}, {pet.breed}")
 
-    def addEvent(self, event: Event):
-        self._events.append(event)
+    def add_events(self, name: str, date: str, location: str) -> None:
+        new_event = Event(name, date, location, self)
+        self._events.append(new_event)
 
-    def showEvents(self):
+    def print_events(self):
         for event in self._events:
-            event.showEvent()
+            event.print_event()
 
-    def showShelter(self):
-        print(f"\n{self.name.upper()}")
-        print(f"Description: {self.description}")
-        print(f"Address: {self.address}")
-        print(f"\nDONATION INFO")
-        print(f"Pix Type: {self._pixKeyType}")
-        print(f"Pix Key: {self._pixKeyValue}")
-        print("Pet Types Accepted:", self.petTypes)
+    def print_allowed_pets(self) -> None:
+        print(f"\n{self.name} shelters the following species: ", end=' ')
+        for pet_type in self.pet_types:
+            print(pet_type, end=' ')
+
+    def print_user_profile(self) -> None:
+        super().print_user_profile()
+        self.print_allowed_pets()

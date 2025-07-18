@@ -14,9 +14,8 @@ class Accounts:
 
     # LOGIN / SIGNUP
 
-    def create_user(self, type: str, username: str, name: str, 
-                    address: str | None, description: str | None
-                    ) -> User | None:
+    def create_user(self, type: str, username: str, name: str
+                    ) -> Adopter | Shelter | None:
         if username in self.users[type]:
             return None
 
@@ -27,9 +26,11 @@ class Accounts:
             self.adopters_available_id += 1
 
         elif type == "Shelter":
-            user = Shelter(self.shelters_available_id, username, name,
-                           address, description)
+            user = Shelter(self.shelters_available_id, username, name)
             self.shelters_available_id += 1
+
+        else:
+            return None
 
         self.users[type][user.username] = user
         return user

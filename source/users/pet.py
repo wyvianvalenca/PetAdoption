@@ -10,44 +10,42 @@ STATUS_LIST: list[str] = [
 class Pet:
     def __init__(self, 
                  name: str, 
-                 animalGroup: str,
+                 pet_type: str,
                  breed: str | None, 
-                 furColor: str | None):
+                 fur_color: str | None):
         self.name: str = name
         self.description: str | None = None
         self.age: int | None = None
 
-        self._animalGroup: str = animalGroup
+        self._pet_type: str = pet_type
         self.breed: str | None = breed
-        self.furColor: str | None = furColor
-        self.age: int | None = None
+        self.fur_color: str | None = fur_color
 
         self._status: str = 'Rescued'
 
-        self.houseType: str | None = None
-        self.coexistsOtherPets: bool = False
+        self.application_form: dict[str, str | int] = {}
 
         self.applications: dict[User, int] = {}
         self._tutor: User | None = None
 
     @property
     def animalGroup(self) -> str:
-        return self._animalGroup
+        return self._pet_type
 
     @property
     def status(self) -> str:
         return self._status.upper()
 
     @status.setter
-    def setter(self, value: str) -> None:
+    def status(self, value: str) -> None:
         if value in STATUS_LIST:
             self._status = value
 
-    def showPet(self):
+    def print_pet(self):
         print(f"{self.name.upper()}" + 20*"-")
         print(f"Desc: {self.description}")
         print(f"Type: {self.animalGroup}")
         print(f"Breed: {self.breed}")
-        print(f"Fur Color: {self.furColor}")
+        print(f"Fur Color: {self.fur_color}")
         print(f"Age: {self.age}")
         print(f"Status: {self.status}")

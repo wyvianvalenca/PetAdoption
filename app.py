@@ -1,5 +1,4 @@
-from audioop import add
-from multiprocessing import Event
+from source.socials.event import Event
 from source.queries.search_pet import search_pets
 from source.socials.feed import Feed
 from source.users.accounts import Accounts
@@ -10,6 +9,48 @@ from source.users.user import User
 
 accounts = Accounts()
 feed = Feed()
+
+ad1 = accounts.create_user("Adopter", "wyvianvalenca", "Wyvian Valença")
+ad2 = accounts.create_user("Adopter", "ycarosales", "ycaro SALES")
+
+sh1 = accounts.create_user("Shelter", "neafa", "NEAFA")
+sh2 = accounts.create_user("Shelter", "reptile_house", "Reptile's House")
+
+pet1 = Pet("Becky", "Dog", "Chow Chow", "Orange")
+pet2 = Pet("Tomas", "Cat", None, "Black")
+pet3 = Pet("Thor", "Dog", "Golden Retriever", "White")
+pet4 = Pet("Shiro", "Dog", None, "White")
+pet5 = Pet("Jack", "Turtle", None, None)
+
+sh1.add_pet_type("Cat")
+sh1.add_pet_type("Dog")
+sh1.add_pet(pet1)
+sh1.add_pet(pet2)
+sh1.add_pet(pet3)
+sh1.add_pet(pet4)
+
+sh2.add_pet_type("Turtle")
+sh2.add_pet(pet5)
+
+def update_user_profile(user: User) -> None:
+    print("\nLet's Update your profile!", 
+          "Here's your current information:")
+
+    user.print_user_profile()
+
+    print("If you don't want to update something, just leave it blank.\n")
+
+    new_profile: dict[str, str] = {}
+    for field in user.user_profile.keys():
+        new_data = input(f"New {field.title()}: ")
+        if new_data:
+            new_profile[field] = new_data
+
+    print(user.update_profile(new_profile))
+
+    print("\nGreat! Here's your new profile!\n")
+
+    user.print_user_profile()
 
 def shelter_menu(user: Shelter):
     print(f"\nWelcome, {user.name}!")
@@ -29,32 +70,7 @@ def shelter_menu(user: Shelter):
             return 0;
 
         elif response == "1":
-            print("\nLet's Update your profile!")
-            user.showShelter()
-            print("If you don't want to update something, just leave it blank")
-
-            name = input("New Name: ")
-            if name:
-                user.name = name
-
-            description = input("New Description: ")
-            if description:
-                user.description = description
-
-            address = input("New Address: ")
-            if address:
-                user.address = address
-
-            pix_type = input("New Pix Type: ")
-            if pix_type:
-                user._pixKeyType = pix_type
-
-            pix_value = input("New Pix Value: ")
-            if pix_value:
-                user._pixKeyValue = pix_value
-
-            print("\nGreat! Here's your new profile!")
-            user.showShelter()
+            update_user_profile(user)
 
         elif response == "2":
             print("\nLet's create an event!")
@@ -62,13 +78,13 @@ def shelter_menu(user: Shelter):
             date = input("Date: ")
             location = input("Location: ")
 
-            event = Event(name, date, location)
-            user.addEvent(event)
+            event = Event(name, date, location, user)
+            user.add_events(event)
             print("[OK] Event created!")
 
         elif response == "3":
             petType = input("\nPet Type: ")
-            user.addPetTypes(petType)
+            user.add_pet_type(petType)
 
         elif response == "4":
             print("\n Let's register a new pet!")
@@ -77,7 +93,7 @@ def shelter_menu(user: Shelter):
             pet_breed = input("Breed: ")
             pet_furColor = input("Fur Color: ")
             pet = Pet(pet_name, pet_type, pet_breed, pet_furColor)
-            print(user.addPet(pet))
+            print(user.add_pet(pet))
 
         elif response == "4a":
             print("\nLet's update a pet!")
@@ -113,9 +129,9 @@ def shelter_menu(user: Shelter):
         elif response == "6":
 
             print("\nLet's add a post! First, choose the type.")
-            for i in range(1, len(user.allowedPosts)):
-                print(f"[{i}] - {user.allowedPosts[i]}")
-            post_type = user.allowedPosts[int(input("Choose an option: "))]
+            for i in range(1, len(user.allowed_posts)):
+                print(f"[{i}] - {user.allowed_posts[i]}")
+            post_type = user.allowed_posts[int(input("Choose an option: "))]
             title = input("Title: ")
             content = input("Content: ")
 
@@ -147,21 +163,7 @@ def adopter_menu(user: Adopter):
             return 0;
 
         elif response == "1":
-
-            print("\nLet's Update your profile!")
-            print("If you don't want to update something, just leave it blank")
-
-            name = input("New Name: ")
-            if name:
-                user.name = name
-            
-            description = input("New Description: ")
-            if description:
-                user.description = description
-
-            age = int(input("Age: "))
-            if age:
-                user.age = age
+            update_user_profile(user)
 
         elif response == "4":
             print("Let's find a pet! First, choose your filter!")
@@ -183,14 +185,14 @@ def adopter_menu(user: Adopter):
             pets = search_pets(users, [shelter], filters)
 
             for pet in pets:
-                pet.showPet()
+                pet.print_pet()
 
         elif response == "6":
 
             print("\nLet's add a post! First, choose the type.")
-            for i in range(1, len(user.allowedPosts)):
-                print(f"[{i}] - {user.allowedPosts[i]}")
-            post_type = user.allowedPosts[int(input("Choose an option: "))]
+            for i in range(1, len(user.allowed_posts)):
+                print(f"[{i}] - {user.allowed_posts[i]}")
+            post_type = user.allowed_posts[int(input("Choose an option: "))]
             title = input("Title: ")
             content = input("Content: ")
 
@@ -217,22 +219,18 @@ def access(type: str) -> User | None:
     while True:
         if response == "b":
             return None
+
         elif response == "1":
             username = input("Username: ")
             user = accounts.login(type, username)
             return user
+
         elif response == "2":
             username = input("Username: ")
             name = input("Name: ")
-
-            if type == "Adopter":
-                user = accounts.create_user(type, username, name, None, None)
-            else:
-                address = input("Address: ")
-                description = input("Description: ")
-                user = accounts.create_user(type, username, name, address, description)
-
+            user = accounts.create_user(type, username, name)
             return user
+
         else:
             print("Invalid option.")
 
@@ -253,6 +251,7 @@ def welcome():
                 adopter_menu(adopter)
             else: 
                 print("Access Failed! Try Again")
+
         elif response == '2':
             shelter = access("Shelter")
 
@@ -260,8 +259,10 @@ def welcome():
                 shelter_menu(shelter)
             else: 
                 print("Access Failed! Try Again")
+
         elif response == "q":
             break
+
         else:
             print("Invalid option.")
 
