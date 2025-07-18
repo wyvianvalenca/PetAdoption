@@ -5,7 +5,7 @@ class Event():
         self.date = date
         self.location = location
 
-    def showEvent(self):
+    def print_event(self):
         print(f"{self.name.upper()} by {self.shelter.name.title()}")
         print("Date: ", self.date)
         print("Location: ", self.location)
