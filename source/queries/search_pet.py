@@ -9,7 +9,7 @@ def isBreed(breeds: list[str], pet: Pet) -> bool:
     return pet.breed in breeds
 
 def isFurColor(colors: list[str], pet: Pet) -> bool:
-    return pet.furColor in colors
+    return pet.fur_color in colors
 
 def inAgeRange(targets: list[int], pet: Pet) -> bool:
     if pet.age is not None:

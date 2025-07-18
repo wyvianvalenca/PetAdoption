@@ -62,7 +62,7 @@ agitantem, lacerto remos. *Neque* anum loca crescitque dolores potest Aurora,
 
 if __name__ == "__main__":
     u = User("wyvian", 1)
-    u.allowedPosts.extend("Success Stories")
+    u.allowed_posts.extend("Success Stories")
     f: Feed = Feed()
     _ = f.create_post(u, "Success Stories", "Testando o post", TEST_MD)
     _ = f.create_post(u, "Success Stories", "Testando o post dnv", TEST_MD)

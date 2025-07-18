@@ -7,7 +7,7 @@ class Feed:
 
     def create_post(self, author: User, type: str, title: str, content: str
              ) -> bool:
-        if type in author.allowedPosts:
+        if type in author.allowed_posts:
             p = Post(author, type, title, content)
             self.posts[title] = p
             author.posts[title] = p
