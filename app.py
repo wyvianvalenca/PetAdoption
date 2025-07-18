@@ -280,7 +280,7 @@ def shelter_menu(user: Shelter) -> None:
     print(f"\nYou're logged in, {user.name}!\n")
 
     while True:
-        print(formatted_menu("Adopter's menu", ADOPTER_OPTIONS))
+        print(formatted_menu("Adopter's menu", SHELTER_OPTIONS))
 
         response = input(INPUT_MESSAGE)
         print()
@@ -350,7 +350,9 @@ def print_all_shelters() -> None:
 
         all_shelters.extend(shelter_info)
 
-    print(formatted_menu("shelter", all_shelters))
+    print(formatted_menu("shelters", all_shelters))
+
+    _ = input("Press any key to return to adopter's menu.")
 
     return None
 
