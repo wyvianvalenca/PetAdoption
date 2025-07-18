@@ -29,7 +29,7 @@ class Pet:
         self._tutor: User | None = None
 
     @property
-    def animalGroup(self) -> str:
+    def pet_type(self) -> str:
         return self._pet_type
 
     @property
@@ -42,10 +42,11 @@ class Pet:
             self._status = value
 
     def print_pet(self):
-        print(f"{self.name.upper()}" + 20*"-")
-        print(f"Desc: {self.description}")
-        print(f"Type: {self.animalGroup}")
-        print(f"Breed: {self.breed}")
-        print(f"Fur Color: {self.fur_color}")
-        print(f"Age: {self.age}")
-        print(f"Status: {self.status}")
+        print(f"{self.name.upper()}" + 20*"-",
+              f"\n > Desc: {self.description}",
+              f"\n > Type: {self.pet_type}",
+              f"\n > Breed: {self.breed}",
+              f"\n > Fur Color: {self.fur_color}",
+              f"\n > Age: {self.age}",
+              f"\n > Status: {self.status}"
+        )

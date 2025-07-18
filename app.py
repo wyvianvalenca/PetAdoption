@@ -1,5 +1,5 @@
-from source.socials.event import Event
 from source.queries.search_pet import search_pets
+from source.socials import post
 from source.socials.feed import Feed
 from source.users.accounts import Accounts
 from source.users.adopter import Adopter
@@ -7,8 +7,104 @@ from source.users.pet import Pet
 from source.users.shelter import Shelter
 from source.users.user import User
 
+""" GLOBAL VARIABLES """
+
 accounts = Accounts()
 feed = Feed()
+
+""" MENU'S OPTIONS AND FORMATTER """
+
+DIVIDER = "\n" + ("=" * 80) + "\n"
+
+INPUT_MESSAGE = "> Choose an Option: "
+
+WELCOME_OPTIONS = [
+    "[1] - Access as Adopter",
+    "[2] - Access as Shelter",
+    "[q] - Quit"
+]
+
+ACCESS_OPTIONS = [
+    "[1] - Login",
+    "[2] - Create Account",
+    "[b] - Return to Welcome Page"
+]
+
+SHELTER_OPTIONS = [
+    "[1] - Update Profile",
+    "[2] - Create Events",
+    "[3] - Add Pet Type",
+    "[4] - Register New Pet",
+    "[4a] - Update Pet",
+    "[5] - View Adoption Application (WIP)",
+    "[6] - Create Post",
+    "[7] - View Social Feed",
+    "[b] - Return to Welcome Page"
+]
+
+ADOPTER_OPTIONS = [
+    "[1] - Update Profile",
+    "[2] - View Events (WIP)",
+    "[3] - View Shelters (WIP)",
+    "[4] - View Pets (WIP)",
+    "[5] - View Adoption Applications (WIP)",
+    "[6] - Create Post",
+    "[7] - View Social Feed",
+    "[b] - Return to main menu"
+]
+
+ADOPTER_MENU = """
+[1] - Update Profile
+[2] - View Events (WIP)
+[3] - View Shelters (WIP)
+[4] - View Pets (WIP)
+[5] - View Adoption Applications (WIP)
+[6] - Create Post
+[7] - View Social Feed
+[b] - Return to main menu
+"""
+
+def formatted_menu(menu_name: str, menu_options: list[str]) -> str:
+    left_padding: int  = 3
+    right_padding: int = 5
+
+    left_up_corner: str    = "┌"
+    left_down_corner: str  = "└"
+    right_up_corner: str   = "┐"
+    right_down_corner: str = "┘"
+    horizontal_line: str   = "─"
+    vertical_line: str     = "│"
+
+    biggest_string = 0
+
+    for option in menu_options:
+        if len(option) > biggest_string:
+            biggest_string = len(option)
+
+    box_width = 1 + left_padding + biggest_string + right_padding + 1
+
+    empty_line = vertical_line + ((box_width - 2) * " ") + vertical_line + "\n"
+
+    # header
+    header:str = left_up_corner + ((2 + left_padding) * horizontal_line) + " " + menu_name.upper() + " "
+    current_header_width = len(header)
+    header = header + ((box_width - current_header_width - 1) * horizontal_line) + right_up_corner + "\n"
+
+    # body
+    body = ""
+    for opt in menu_options:
+        line = vertical_line + (left_padding * " ") + opt
+        current_width = len(line)
+        line = line + ((box_width - current_width - 1) * " ") + vertical_line + "\n"
+
+        body = body + line
+
+    # footer
+    footer = left_down_corner + ((box_width - 2) * horizontal_line) + right_down_corner + "\n"
+
+    return "\n" + header + empty_line + body + empty_line + footer
+
+"""INITIAL DATA"""
 
 ad1 = accounts.create_user("Adopter", "wyvianvalenca", "Wyvian Valença")
 ad2 = accounts.create_user("Adopter", "ycarosales", "ycaro SALES")
@@ -32,6 +128,14 @@ sh1.add_pet(pet4)
 sh2.add_pet_type("Turtle")
 sh2.add_pet(pet5)
 
+""" TEXT UI FUNCTION """
+
+# USER'S TEXT UI FUNCTIONS
+
+def wip() -> None:
+    print("We're still working on this option!")
+    return None
+
 def update_user_profile(user: User) -> None:
     print("\nLet's Update your profile!", 
           "Here's your current information:")
@@ -52,118 +156,187 @@ def update_user_profile(user: User) -> None:
 
     user.print_user_profile()
 
-def shelter_menu(user: Shelter):
-    print(f"\nWelcome, {user.name}!")
-    print("[1] - Update Profile")
-    print("[2] - Create Events")
-    print("[3] - Add Pet Type")
-    print("[4] - Register New Pet")
-    print("[4a] - Update Pet")
-    print("[5] - View Adoption Applications")
-    print("[6] - Create Post")
-    print("[7] - View Social Feed")
-    print("[b] - Return to main menu")
+def create_post(user: User) -> None:
+    print("\nLet's add a post! First, choose the type.")
+    print(formatted_menu("post type", user.allowed_posts[1:]))
+
+    post_type = input("> Choose a type: ")
+    while post_type not in user.allowed_posts:
+        print("\nInvalid Option. Try Again.")
+        post_type = input("> Choose a type: ")
+
+
+    print(f"\nLet's write a {post_type}! Please type your post's info\n")
+    title = input("Title: ")
+    content = input("Content: ")
+
+    if feed.create_post(user, post_type, title, content):
+        print("[OK] Post created")
+    else:
+        print("[FAIL] You can't post that.")
+
+
+# SHELTER'S TEXT UI FUNCTIONS
+
+def create_event(user: Shelter) -> None:
+    print("\nLet's create an event!")
+    name = input("Name: ")
+    date = input("Date: ")
+    location = input("Location: ")
+
+    user.add_events(name, date, location)
+    print("[OK] Event created!")
+
+    return None
+
+def add_pet_type(user: Shelter) -> None:
+    petType = input("\nPet Type: ")
+    user.add_pet_type(petType)
+
+    return None
+
+def register_new_pet(user: Shelter) -> None:
+    print("\n Let's register a new pet! Type it's info: \n")
+    pet_name = input("Name: ")
+    pet_type = input("Type (species): ")
+    pet_breed = input("Breed: ")
+    pet_furColor = input("Fur Color: ")
+
+    pet = Pet(pet_name, pet_type, pet_breed, pet_furColor)
+
+    print(user.add_pet(pet))
+
+    return None
+
+def find_pet(name: str, shelters_pets: list[Pet]) -> Pet | None:
+
+    for pet in shelters_pets:
+        if name == pet.name:
+            return pet
+
+    return None
+
+def update_pet(pets: list[Pet]) -> None:
+
+    print("\nLet's update a pet!",
+          "First, let's find the pet you want to update.")
+    name = input("Pet Name: ")
+    pet = find_pet(name, pets)
+
+    while pet is None:
+        print("Pet Not Found! Try again or type q to quit.")
+        name = input("Pet Name: ")
+
+        if name == "q":
+            return
+
+        pet = find_pet(name, pets)
+
+    print("If you don't want to update something, just leave it blank")
+
+    new_name = input("New Name: ")
+    if new_name:
+        pet.name = new_name
+
+    new_description = input("New Description: ")
+    if new_description:
+        pet.description = new_description
+
+    new_age = input("New Age: ")
+    if new_age:
+        pet.age = int(new_age)
+
+    new_breed = input("New Breed: ")
+    if new_breed:
+        pet.breed = new_breed
+
+    new_fur = input("New Fur Color: ")
+    if new_fur:
+        pet.fur_color = new_fur
+
+    print(f"\nGreat! Here's {pet.name}'s new profile!")
+    pet.print_pet()
+
+    return
+
+SHELTER_MENU_FUNCTIONS = [
+    ("1", "Update Profile", update_user_profile),
+    ("2", "Create Events", create_event),
+    ("3", "Add Pet Type", add_pet_type),
+    ("4", "Register New Pet", register_new_pet),
+    ("4a", "Update Pet Profile", update_pet),
+    ("5", "[WIP] View Adoption Applications", wip),
+    ("6", "Create Post", create_post),
+    ("7", "Open Social Feed", feed.view_feed)
+]
+
+def shelter_menu(user: Shelter) -> None:
+    print(DIVIDER)
+    print(f"\nYou're logged in, {user.name}!\n")
 
     while True:
-        response = input("\nChoose an option: ")
+        print(formatted_menu("Adopter's menu", ADOPTER_OPTIONS))
+
+        response = input(INPUT_MESSAGE)
+        print()
+
         if response == "b":
-            return 0;
+            return
 
         elif response == "1":
             update_user_profile(user)
 
         elif response == "2":
-            print("\nLet's create an event!")
-            name = input("Name: ")
-            date = input("Date: ")
-            location = input("Location: ")
-
-            event = Event(name, date, location, user)
-            user.add_events(event)
-            print("[OK] Event created!")
+            create_event(user)
 
         elif response == "3":
-            petType = input("\nPet Type: ")
-            user.add_pet_type(petType)
+            add_pet_type(user)
 
         elif response == "4":
-            print("\n Let's register a new pet!")
-            pet_name = input("Name: ")
-            pet_type = input("Type (species): ")
-            pet_breed = input("Breed: ")
-            pet_furColor = input("Fur Color: ")
-            pet = Pet(pet_name, pet_type, pet_breed, pet_furColor)
-            print(user.add_pet(pet))
+            register_new_pet(user)
 
         elif response == "4a":
-            print("\nLet's update a pet!")
-            name = input("Pet Name: ")
-            
-            choosen = False
-            for pet in users.pets:
-                if name == pet.name:
-                    choosen = pet
-                    choosen.showPet()
-                    break
-
-            if choosen == False:
-                print("Pet not found.")
-                continue
-            
-            print("If you don't want to update something, just leave it blank")
-
-            name = input("Name: ")
-            if name:
-                choosen.name = name
-
-            description = input("Description: ")
-            if description:
-                choosen.description = description
-
-            print(f"\nGreat! Here's {choosen.name}'s new profile!")
-            choosen.showShelter()
+            update_pet(user.pets)
 
         elif response == "5":
-            pass
+            wip()
 
         elif response == "6":
-
-            print("\nLet's add a post! First, choose the type.")
-            for i in range(1, len(user.allowed_posts)):
-                print(f"[{i}] - {user.allowed_posts[i]}")
-            post_type = user.allowed_posts[int(input("Choose an option: "))]
-            title = input("Title: ")
-            content = input("Content: ")
-
-            if feed.create_post(user, post_type, title, content):
-                print("[OK] Post created")
-            else:
-                print("[FAIL] You can't post that.")
+            create_post(user)
 
         elif response == "7":
             feed.view_feed()
 
         else:
-            print("\nInvalid Option.\n")
+            print("\nInvalid Option.")
 
-def adopter_menu(user: Adopter):
-    print(f"\nWelcome, {user.name}!")
-    print("[1] - Update Profile")
-    print("[2] - View Events")
-    print("[3] - View Shelters")
-    print("[4] - View Pets")
-    print("[5] - View Adoption Applications")
-    print("[6] - Create Post")
-    print("[7] - View Social Feed")
-    print("[b] - Return to main menu")
+# SHELTER'S TEXT UI FUNCTIONS
+
+ADOPTER_MENU_FUNCTIONS = [
+    ("1", "Update Profile", update_user_profile)
+]
+
+def adopter_menu(user: Adopter) -> None:
+    print(DIVIDER)
+    print(f"\nYou're logged in, {user.name}!\n")
 
     while True:
-        response = input("\nChoose an option: ")
+        print(formatted_menu("Adopter's menu", ADOPTER_OPTIONS))
+
+        response = input(INPUT_MESSAGE)
+        print()
+
         if response == "b":
-            return 0;
+            return None
 
         elif response == "1":
             update_user_profile(user)
+
+        elif response == "2":
+            wip()
+
+        elif response == "3":
+            wip()
 
         elif response == "4":
             print("Let's find a pet! First, choose your filter!")
@@ -187,19 +360,11 @@ def adopter_menu(user: Adopter):
             for pet in pets:
                 pet.print_pet()
 
+        elif response == "5":
+            wip()
+
         elif response == "6":
-
-            print("\nLet's add a post! First, choose the type.")
-            for i in range(1, len(user.allowed_posts)):
-                print(f"[{i}] - {user.allowed_posts[i]}")
-            post_type = user.allowed_posts[int(input("Choose an option: "))]
-            title = input("Title: ")
-            content = input("Content: ")
-
-            if feed.create_post(user, post_type, title, content):
-                print("[OK] Post created")
-            else:
-                print("[FAIL] You can't post that.")
+            create_post(user)
 
         elif response == "7":
             feed.view_feed()
@@ -210,39 +375,42 @@ def adopter_menu(user: Adopter):
 
 
 def access(type: str) -> User | None:
+    print(DIVIDER)
+    print(f"\nYou chose {type.title()}! That's so cool!\n")
 
-    print("\nCome on in!")
-    print("[1] - Login")
-    print("[2] - Create Account")
-    print("[b] - Return to main menu")
-    response = input("Choose an option: ")
     while True:
+        print(formatted_menu("Access Menu", ACCESS_OPTIONS))
+
+        response = input(INPUT_MESSAGE)
+        print()
+
         if response == "b":
             return None
 
-        elif response == "1":
+        elif response == "1": #login
             username = input("Username: ")
             user = accounts.login(type, username)
             return user
 
-        elif response == "2":
+        elif response == "2": #creat account
             username = input("Username: ")
             name = input("Name: ")
             user = accounts.create_user(type, username, name)
             return user
 
         else:
-            print("Invalid option.")
-
+            print("Invalid option for access.\n")
 
 
 def welcome():
+    print(DIVIDER)
+    print("\nWelcome!\n")
+    
     while True:
-        print("\nWelcome! How do you want to access the system?")
-        print("[1] - Adopter")
-        print("[2] - Shelter")
-        print("[q] - Quit")
-        response = input("Choose an option: ")
+        print(formatted_menu("Pet App", WELCOME_OPTIONS))
+
+        response = input(INPUT_MESSAGE)
+        print()
 
         if response == '1':
             adopter = access("Adopter")

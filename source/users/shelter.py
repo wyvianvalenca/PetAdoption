@@ -29,16 +29,16 @@ class Shelter(User):
         return self._pets
 
     def add_pet(self, pet: Pet) -> str:
-        if pet.animalGroup in self.pet_types:
+        if pet.pet_type in self.pet_types:
             self.pets.append(pet)
-            self.pet_types[pet.animalGroup].append(pet.breed)
+            self.pet_types[pet.pet_type].append(pet.breed)
             return f"[OK] {pet.name} added to {self.name}"
         else:
-            return f"[FAIL] {self.name} does not shelters {pet.animalGroup} yet."
+            return f"[FAIL] {self.name} does not shelters {pet.pet_type} yet."
 
     def print_pets(self):
         for pet in self.pets:
-            print(f"[{pet.name}] - {pet.animalGroup}, {pet.breed}")
+            print(f"[{pet.name}] - {pet.pet_type}, {pet.breed}")
 
     def add_events(self, name: str, date: str, location: str) -> None:
         new_event = Event(name, date, location, self)

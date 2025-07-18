@@ -1,9 +1,10 @@
+from types import FunctionType
 from source.users.adopter import Adopter
 from source.users.shelter import Shelter
 from source.users.pet import Pet
 
 def isType(types: list[str], pet: Pet) -> bool:
-    return pet.animalGroup in types
+    return pet.pet_type in types
 
 def isBreed(breeds: list[str], pet: Pet) -> bool:
     return pet.breed in breeds
