@@ -49,6 +49,23 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
     - View Success Stories
     - CRUD Forum Posts
 
+# TO-DO:
+
+## Functional Requirements
+- [ ] Create application class
+- [ ] Allow shelters to respond applications
+- [ ] Allow adopters to apply to adopt
+- [ ] Allow adopters to search and filter pets
+- [ ] Update post printing (use formatted_menu)
+- [ ] Allow commenting posts
+- [ ] Allow liking posts
+
+## Extra (ideas)
+- [ ] Filter events
+- [ ] Order events by date
+- [ ] Filter social posts
+- [ ] Clean screen after each operation
+
 # Author
 Wyvian Valença
 wgcv2@ic.ufal.br
