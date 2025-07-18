@@ -40,9 +40,13 @@ class Shelter(User):
         for pet in self.pets:
             print(f"[{pet.name}] - {pet.pet_type}, {pet.breed}")
 
+    @property
+    def events(self) -> list[Event]:
+        return self._events
+
     def add_events(self, name: str, date: str, location: str) -> None:
         new_event = Event(name, date, location, self)
-        self._events.append(new_event)
+        self.events.append(new_event)
 
     def print_events(self):
         for event in self._events:
@@ -52,6 +56,7 @@ class Shelter(User):
         print(f"\n{self.name} shelters the following species: ", end=' ')
         for pet_type in self.pet_types:
             print(pet_type, end=' ')
+        print()
 
     def print_user_profile(self) -> None:
         super().print_user_profile()

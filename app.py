@@ -44,8 +44,8 @@ SHELTER_OPTIONS = [
 
 ADOPTER_OPTIONS = [
     "[1] - Update Profile",
-    "[2] - View Events (WIP)",
-    "[3] - View Shelters (WIP)",
+    "[2] - View Events",
+    "[3] - View Shelters",
     "[4] - View Pets (WIP)",
     "[5] - View Adoption Applications (WIP)",
     "[6] - Create Post",
@@ -53,19 +53,8 @@ ADOPTER_OPTIONS = [
     "[b] - Return to main menu"
 ]
 
-ADOPTER_MENU = """
-[1] - Update Profile
-[2] - View Events (WIP)
-[3] - View Shelters (WIP)
-[4] - View Pets (WIP)
-[5] - View Adoption Applications (WIP)
-[6] - Create Post
-[7] - View Social Feed
-[b] - Return to main menu
-"""
-
 def formatted_menu(menu_name: str, menu_options: list[str]) -> str:
-    left_padding: int  = 3
+    left_padding: int  = 2
     right_padding: int = 5
 
     left_up_corner: str    = "┌"
@@ -109,8 +98,20 @@ def formatted_menu(menu_name: str, menu_options: list[str]) -> str:
 ad1 = accounts.create_user("Adopter", "wyvianvalenca", "Wyvian Valença")
 ad2 = accounts.create_user("Adopter", "ycarosales", "ycaro SALES")
 
-sh1 = accounts.create_user("Shelter", "neafa", "NEAFA")
+sh1 = accounts.create_user("Shelter", "csf", "Casa São Francisco")
 sh2 = accounts.create_user("Shelter", "reptile_house", "Reptile's House")
+
+print(sh1.update_profile({
+    "description": "🏥 Veterinária Popular",
+    "address": "R. dos Bandeirantes, 504 - Farol, Maceió - AL, 57051-120",
+    "donation type": "PIX CNPJ",
+    "donation code": "12.234.456/0001-01"
+}))
+
+print(sh2.update_profile({
+    "description": "Amamos repteis!!!!",
+    "address": "R. dos Repteis, 111 - Fatol, Maceió"
+}))
 
 pet1 = Pet("Becky", "Dog", "Chow Chow", "Orange")
 pet2 = Pet("Tomas", "Cat", None, "Black")
@@ -127,6 +128,12 @@ sh1.add_pet(pet4)
 
 sh2.add_pet_type("Turtle")
 sh2.add_pet(pet5)
+
+
+sh1.add_events("Fundraising!", "12/08/2025", "Praça Centenário - Farol, Maceió")
+sh1.add_events("Adoption Fair", "10/10/2025", "UFAL, Praça da Paz - Cidade Universitária, Maceió")
+
+sh2.add_events("Turle Festival", "01/02/2026", "Praça Dois Leões - Jaraguá, Maceió")
 
 """ TEXT UI FUNCTION """
 
@@ -209,7 +216,6 @@ def register_new_pet(user: Shelter) -> None:
     return None
 
 def find_pet(name: str, shelters_pets: list[Pet]) -> Pet | None:
-
     for pet in shelters_pets:
         if name == pet.name:
             return pet
@@ -217,7 +223,6 @@ def find_pet(name: str, shelters_pets: list[Pet]) -> Pet | None:
     return None
 
 def update_pet(pets: list[Pet]) -> None:
-
     print("\nLet's update a pet!",
           "First, let's find the pet you want to update.")
     name = input("Pet Name: ")
@@ -310,7 +315,45 @@ def shelter_menu(user: Shelter) -> None:
         else:
             print("\nInvalid Option.")
 
-# SHELTER'S TEXT UI FUNCTIONS
+# ADOPTER'S TEXT UI FUNCTIONS
+
+def print_all_events() -> None:
+    all_events: list[str] = []
+    for shelter in accounts.users["Shelter"].values():
+        shelter_events = []
+        for event in shelter.events:
+            shelter_events.append(f"> {event.name.upper()} by {event.shelter.name.title()}")
+            shelter_events.append(f"     - Location: {event.location}")
+            shelter_events.append(f"     - Date: {event.date}")
+            shelter_events.append("")
+
+        all_events.extend(shelter_events)
+
+    print(formatted_menu("events", all_events))
+
+    _ = input("Press any key to return to adopter's menu.")
+
+    return None
+
+def print_all_shelters() -> None:
+    all_shelters: list[str] = []
+    for shelter in accounts.users["Shelter"].values():
+        shelter_info = []
+
+        shelter_info.append(f"> {shelter.name.upper()}")
+
+        for field, info in shelter.user_profile.items():
+            if info:
+                shelter_info.append(f"     - {field.title()}: {info}")
+
+        shelter_info.append("")
+
+        all_shelters.extend(shelter_info)
+
+    print(formatted_menu("shelter", all_shelters))
+
+    return None
+
 
 ADOPTER_MENU_FUNCTIONS = [
     ("1", "Update Profile", update_user_profile)
@@ -333,10 +376,10 @@ def adopter_menu(user: Adopter) -> None:
             update_user_profile(user)
 
         elif response == "2":
-            wip()
+            print_all_events()
 
         elif response == "3":
-            wip()
+            print_all_shelters()
 
         elif response == "4":
             print("Let's find a pet! First, choose your filter!")
