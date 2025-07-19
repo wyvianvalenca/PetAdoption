@@ -13,7 +13,7 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 - Community Forum: A forum for adopters and pet lovers to share experiences and advice.
      > Commenting and viewing comments was WIP
 
-## Não atendidos
+## Not implemented
 - [ broken ] Search and Filter Options: Enabling users to search and filter pets based on various criteria;
 - [ not attempted ] Adoption Application Processing: Handling and processing adoption applications;
 - [ not attempted ] Donation Processing: Facilitating donations to shelters and rescue organizations;
@@ -24,7 +24,12 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 - Adopters can list all Shelters
 - Adopters can list all Events
 
+### 25-07-19
+- Adopters can list all pets
+- Adopters can filter pets
+
 # Features
+
 ## Adopters:
 - Create & Update Profile
 - List Events
@@ -52,10 +57,17 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 # TO-DO:
 
 ## Functional Requirements
+- [ OK ] Allow adopters to search and filter pets
 - [ ] Create application class
-- [ ] Allow shelters to respond applications
+        > shelters can change pet's status to "available for adoption"
+        > shelters can write questions to ask adoptes
+        > shelters can define expected answers
+        > users can submit adoption application (answer questions writen by shelter)
+        > shelters can view all adopter that applied to adopt a pet, and their answers, and the compatibility with expected answers
+        > shelters can choose a adopter
 - [ ] Allow adopters to apply to adopt
-- [ ] Allow adopters to search and filter pets
+- [ ] Allow shelters to respond applications
+- [ ] Add initial posts
 - [ ] Update post printing (use formatted_menu)
 - [ ] Allow commenting posts
 - [ ] Allow liking posts

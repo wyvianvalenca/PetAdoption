@@ -26,15 +26,13 @@ def search_pets(users: dict[str, dict[str, Shelter | Adopter]],
     functions: dict[str, FunctionType] = {
         "types": isType,
         "breeds": isBreed,
-        "colors": isFurColor,
-        "ageRange": inAgeRange
+        "colors": isFurColor
     }
 
     filtered: dict[str, list[Pet]] = {
         "types": [],
         "breeds": [],
-        "colors": [],
-        "ageRange": []
+        "colors": []
     }
 
     pets_shelters: list[Pet] = []

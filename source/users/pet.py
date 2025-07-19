@@ -41,6 +41,29 @@ class Pet:
         if value in STATUS_LIST:
             self._status = value
 
+    def pet_strings(self) -> list[str]:
+        pet_info: list[str] = []
+
+        pet_info.append(f"{self.name.upper()}")
+        pet_info.append(f"    > Pet Type: {self.pet_type}")
+
+        if self.breed:
+            pet_info.append(f"    > Breed: {self.breed}")
+
+        if self.description:
+            pet_info.append(f"    > Desc: {self.description}")
+
+        if self.fur_color:
+            pet_info.append(f"    > Fur Color: {self.fur_color}")
+
+        if self.age:
+            pet_info.append(f"    > Age: {self.age}")
+
+        pet_info.append(f"    > Status: {self.status}")
+        pet_info.append("")
+
+        return pet_info
+
     def print_pet(self):
         print(f"{self.name.upper()}" + 20*"-",
               f"\n > Desc: {self.description}",

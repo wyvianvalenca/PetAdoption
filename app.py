@@ -12,7 +12,7 @@ from source.users.user import User
 accounts = Accounts()
 feed = Feed()
 
-""" MENU'S OPTIONS AND FORMATTER """
+""" OPTIONS AND FORMATTER """
 
 DIVIDER = "\n" + ("=" * 80) + "\n"
 
@@ -46,7 +46,7 @@ ADOPTER_OPTIONS = [
     "[1] - Update Profile",
     "[2] - View Events",
     "[3] - View Shelters",
-    "[4] - View Pets (WIP)",
+    "[4] - View Pets",
     "[5] - View Adoption Applications (WIP)",
     "[6] - Create Post",
     "[7] - View Social Feed",
@@ -356,6 +356,120 @@ def print_all_shelters() -> None:
 
     return None
 
+def choose_shelters(shelters: dict[str, Shelter]) -> list[str] | None:
+    all_shelters: list[str] = []
+    for username, shelter in shelters.items():
+        all_shelters.append(f"{username} - {shelter.name}")
+
+    print(DIVIDER)
+    print(f"\nFiltering shelters!".upper())
+
+    print(formatted_menu("shelters", all_shelters))
+
+    choosen_shelters: list[str] = []
+    while True:
+        response = input("\n> Add shelter to filter (username) or q to stop: ")
+
+        if response in shelters.keys():
+            print(f"- {response} added as filter to shelters.")
+            choosen_shelters.append(response)
+            continue
+
+        if response == "q":
+            break
+
+        print("Shelter not found. Try again.\n")
+
+    if len(choosen_shelters) > 0:
+        return choosen_shelters
+    else:
+        return None
+
+def all_pets(shelters: dict[str, Shelter]) -> list[Pet]:
+    pets: list[Pet] = []
+    for shelter in shelters.values():
+        for pet in shelter.pets:
+            pets.append(pet)
+
+    return pets
+
+def print_pets_list(pets: list[Pet]) -> None:
+    """formatted print of all pets in a given Pet's list"""
+
+    pets_info: list[str] = []
+    for pet in pets:
+        pets_info.extend(pet.pet_strings())
+
+    print(formatted_menu("pets", pets_info))
+
+def choose_filters(pets: list[Pet]
+                   ) -> dict[str, list[str] | list[int] | None]:
+    filters: dict[str, list[str] | None] = {
+        "types": [],
+        "breeds": [],
+        "colors": []
+    }
+
+    options = {
+        "types": [pet.pet_type for pet in pets],
+        "breeds": [pet.breed for pet in pets if pet.breed],
+        "colors": [pet.fur_color for pet in pets if pet.fur_color]
+    }
+
+    for filter, opts in options.items():
+        print(DIVIDER)
+        print(f"\nFiltering {filter}!".upper())
+
+        print(formatted_menu(filter, opts))
+
+        while True:
+            response = input("\n> Type a option to filter or q to quit: ")
+            if response in opts:
+                filters[filter].append(response)
+                print(f"- {response} added as filter to {filter}.")
+                continue
+
+            if response == "q":
+                if len(filters[filter]) == 0:
+                    filters[filter] = None
+                break
+
+            print("Invalid option. Try again.")
+
+    return filters
+
+def print_all_pets(shelters: dict[str, Shelter]) -> None:
+    print(DIVIDER)
+
+    pets = all_pets(shelters)
+
+    print_pets_list(pets)
+
+    while True:
+        response = input("> Do you want to filter pets (y/n)? ")
+
+        if response == "y":
+            filtered_shelters = choose_shelters(accounts.users["Shelter"])
+            filters = choose_filters(pets)
+            filtered_pets = list(
+                search_pets(accounts.users, filtered_shelters, filters)
+            )
+
+            print(DIVIDER)
+            print("Search results:")
+
+            if len(filtered_pets) == 0:
+                print(formatted_menu("pets", ["No pet matches filters."]))
+            else:
+                print_pets_list(filtered_pets)
+
+            break
+
+        elif response == "n":
+            break
+
+    _ = input("Press any key to return do adopter's menu.")
+
 
 ADOPTER_MENU_FUNCTIONS = [
     ("1", "Update Profile", update_user_profile)
@@ -384,26 +498,7 @@ def adopter_menu(user: Adopter) -> None:
             print_all_shelters()
 
         elif response == "4":
-            print("Let's find a pet! First, choose your filter!")
-            print("If you don't want to filter, leave it blank")
-
-            shelter = input("Type a Shelter: ")
-            animal_group = input("Type a Animal Group: ")
-            breed = input("Type a breed: ")
-            color = input("Type a Fur Color: ")
-            age_min = int(input("Type a minimal age: "))
-            age_max = int(input("Type a maximal age: "))
-
-            filters = { }
-            filters['types'] = [animal_group]
-            filters['breeds'] = [breed]
-            filters['colors'] = [color]
-            filters['ageRange'] = [age_max]
-
-            pets = search_pets(users, [shelter], filters)
-
-            for pet in pets:
-                pet.print_pet()
+            print_all_pets(accounts.users["Shelter"])
 
         elif response == "5":
             wip()
