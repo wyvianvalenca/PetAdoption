@@ -1,6 +1,6 @@
 from source.socials.event import Event
 from source.users.user import User
-from source.users.pet import Pet, STATUS_LIST
+from source.users.pet import Pet, STATUS_SEQUENCE
 
 class Shelter(User):
     def __init__(self, id: int, username: str, name: str):
@@ -30,9 +30,12 @@ class Shelter(User):
 
     def add_pet(self, pet: Pet) -> str:
         if pet.pet_type in self.pet_types:
-            self.pets.append(pet)
-            self.pet_types[pet.pet_type].append(pet.breed)
-            return f"[OK] {pet.name} added to {self.name}"
+            if pet.name not in [pet.name for pet in self.pets]:
+                self.pets.append(pet)
+                self.pet_types[pet.pet_type].append(pet.breed)
+                return f"[OK] {pet.name} added to {self.name}"
+            else:
+                return f"[FAIL] '{pet.name}' already registered."
         else:
             return f"[FAIL] {self.name} does not shelters {pet.pet_type} yet."
 

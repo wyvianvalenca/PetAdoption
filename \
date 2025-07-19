@@ -37,7 +37,6 @@ SHELTER_OPTIONS = [
     "[3] - Add Pet Type",
     "[4] - Register New Pet",
     "[4a] - Update Pet",
-    "[4b] - Write Application Form to Pet (WIP)",
     "[5] - View Adoption Application (WIP)",
     "[6] - Create Post",
     "[7] - View Social Feed",
@@ -52,7 +51,7 @@ ADOPTER_OPTIONS = [
     "[5] - View Adoption Applications (WIP)",
     "[6] - Create Post",
     "[7] - View Social Feed",
-    "[b] - Return to Welcome Page"
+    "[b] - Return to main menu"
 ]
 
 def boxed_list(menu_name: str, menu_options: list[str]) -> str:
@@ -223,7 +222,7 @@ def register_new_pet(user: Shelter) -> None:
 
 def find_pet(name: str, shelters_pets: list[Pet]) -> Pet | None:
     for pet in shelters_pets:
-        if name.lower() == pet.name.lower():
+        if name == pet.name:
             return pet
 
     return None
@@ -248,7 +247,7 @@ def update_pet(pets: list[Pet]) -> None:
     print(f"\nHere's {pet.name}'s current profile:")
     print(boxed_list("current info", pet.pet_strings()))
 
-    print("If you don't want to update something, just leave it blank.\n")
+    print("If you don't want to update something, just leave it blank")
 
     new_name = input("> New Name: ")
     if new_name:
@@ -270,19 +269,12 @@ def update_pet(pets: list[Pet]) -> None:
     if new_fur:
         pet.fur_color = new_fur
 
-    while True:
-        new_status = input(f"> Do you want to update status from {pet.status} to {STATUS_SEQUENCE[pet.status.lower()].upper()} (y/n)? ")
-
-        if new_status == "y":
-            pet.update_status()
-            continue
-
-        break
+    new_status = input(f"> Do you want to update status from {pet.status} to {STATUS_SEQUENCE[pet.status]} (y/n)? ")
+    if new_status == "y":
+        pet.update_status()
 
     print(f"\nGreat! Here's {pet.name}'s new profile!")
     print(boxed_list("new profile", pet.pet_strings()))
-
-    _ = input("Press any key to return do shelter's menu.")
 
     return
 
@@ -324,9 +316,6 @@ def shelter_menu(user: Shelter) -> None:
 
         elif response == "4a":
             update_pet(user.pets)
-
-        elif response == "4b":
-            wip()
 
         elif response == "5":
             wip()
