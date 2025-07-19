@@ -53,14 +53,16 @@ ADOPTER_OPTIONS = [
     "[b] - Return to main menu"
 ]
 
-def formatted_menu(menu_name: str, menu_options: list[str]) -> str:
+def boxed_list(menu_name: str, menu_options: list[str]) -> str:
     left_padding: int  = 2
     right_padding: int = 5
 
-    left_up_corner: str    = "┌"
-    left_down_corner: str  = "└"
-    right_up_corner: str   = "┐"
-    right_down_corner: str = "┘"
+    indent = "  "
+
+    left_up_corner: str    = "╭"
+    left_down_corner: str  = "╰"
+    right_up_corner: str   = "╮"
+    right_down_corner: str = "╯"
     horizontal_line: str   = "─"
     vertical_line: str     = "│"
 
@@ -72,12 +74,13 @@ def formatted_menu(menu_name: str, menu_options: list[str]) -> str:
 
     box_width = 1 + left_padding + biggest_string + right_padding + 1
 
-    empty_line = vertical_line + ((box_width - 2) * " ") + vertical_line + "\n"
+    empty_line = indent + vertical_line + ((box_width - 2) * " ") + vertical_line + "\n"
 
     # header
     header:str = left_up_corner + ((2 + left_padding) * horizontal_line) + " " + menu_name.upper() + " "
     current_header_width = len(header)
     header = header + ((box_width - current_header_width - 1) * horizontal_line) + right_up_corner + "\n"
+    header = indent + header
 
     # body
     body = ""
@@ -85,13 +88,14 @@ def formatted_menu(menu_name: str, menu_options: list[str]) -> str:
         line = vertical_line + (left_padding * " ") + opt
         current_width = len(line)
         line = line + ((box_width - current_width - 1) * " ") + vertical_line + "\n"
+        line = indent + line
 
         body = body + line
 
     # footer
-    footer = left_down_corner + ((box_width - 2) * horizontal_line) + right_down_corner + "\n"
+    footer = indent + left_down_corner + ((box_width - 2) * horizontal_line) + right_down_corner
 
-    return "\n" + header + empty_line + body + empty_line + footer
+    return "\n" + header + empty_line + body + empty_line + footer + "\n"
 
 """INITIAL DATA"""
 
@@ -165,7 +169,7 @@ def update_user_profile(user: User) -> None:
 
 def create_post(user: User) -> None:
     print("\nLet's add a post! First, choose the type.")
-    print(formatted_menu("post type", user.allowed_posts[1:]))
+    print(boxed_list("post type", user.allowed_posts[1:]))
 
     post_type = input("> Choose a type: ")
     while post_type not in user.allowed_posts:
@@ -280,7 +284,7 @@ def shelter_menu(user: Shelter) -> None:
     print(f"\nYou're logged in, {user.name}!\n")
 
     while True:
-        print(formatted_menu("Adopter's menu", SHELTER_OPTIONS))
+        print(boxed_list("Adopter's menu", SHELTER_OPTIONS))
 
         response = input(INPUT_MESSAGE)
         print()
@@ -323,13 +327,13 @@ def print_all_events() -> None:
         shelter_events = []
         for event in shelter.events:
             shelter_events.append(f"> {event.name.upper()} by {event.shelter.name.title()}")
-            shelter_events.append(f"     - Location: {event.location}")
-            shelter_events.append(f"     - Date: {event.date}")
+            shelter_events.append(f"    - Location: {event.location}")
+            shelter_events.append(f"    - Date: {event.date}")
             shelter_events.append("")
 
         all_events.extend(shelter_events)
 
-    print(formatted_menu("events", all_events))
+    print(boxed_list("events", all_events))
 
     _ = input("Press any key to return to adopter's menu.")
 
@@ -344,13 +348,13 @@ def print_all_shelters() -> None:
 
         for field, info in shelter.user_profile.items():
             if info:
-                shelter_info.append(f"     - {field.title()}: {info}")
+                shelter_info.append(f"    - {field.title()}: {info}")
 
         shelter_info.append("")
 
         all_shelters.extend(shelter_info)
 
-    print(formatted_menu("shelters", all_shelters))
+    print(boxed_list("shelters", all_shelters))
 
     _ = input("Press any key to return to adopter's menu.")
 
@@ -364,7 +368,7 @@ def choose_shelters(shelters: dict[str, Shelter]) -> list[str] | None:
     print(DIVIDER)
     print(f"\nFiltering shelters!".upper())
 
-    print(formatted_menu("shelters", all_shelters))
+    print(boxed_list("shelters", all_shelters))
 
     choosen_shelters: list[str] = []
     while True:
@@ -400,7 +404,7 @@ def print_pets_list(pets: list[Pet]) -> None:
     for pet in pets:
         pets_info.extend(pet.pet_strings())
 
-    print(formatted_menu("pets", pets_info))
+    print(boxed_list("pets", pets_info))
 
 def choose_filters(pets: list[Pet]
                    ) -> dict[str, list[str] | list[int] | None]:
@@ -420,7 +424,7 @@ def choose_filters(pets: list[Pet]
         print(DIVIDER)
         print(f"\nFiltering {filter}!".upper())
 
-        print(formatted_menu(filter, opts))
+        print(boxed_list(filter, opts))
 
         while True:
             response = input("\n> Type a option to filter or q to quit: ")
@@ -459,7 +463,7 @@ def print_all_pets(shelters: dict[str, Shelter]) -> None:
             print("Search results:")
 
             if len(filtered_pets) == 0:
-                print(formatted_menu("pets", ["No pet matches filters."]))
+                print(boxed_list("pets", ["No pet matches filters."]))
             else:
                 print_pets_list(filtered_pets)
 
@@ -480,7 +484,7 @@ def adopter_menu(user: Adopter) -> None:
     print(f"\nYou're logged in, {user.name}!\n")
 
     while True:
-        print(formatted_menu("Adopter's menu", ADOPTER_OPTIONS))
+        print(boxed_list("Adopter's menu", ADOPTER_OPTIONS))
 
         response = input(INPUT_MESSAGE)
         print()
@@ -519,7 +523,7 @@ def access(type: str) -> User | None:
     print(f"\nYou chose {type.title()}! That's so cool!\n")
 
     while True:
-        print(formatted_menu("Access Menu", ACCESS_OPTIONS))
+        print(boxed_list("Access Menu", ACCESS_OPTIONS))
 
         response = input(INPUT_MESSAGE)
         print()
@@ -547,7 +551,7 @@ def welcome():
     print("\nWelcome!\n")
     
     while True:
-        print(formatted_menu("Pet App", WELCOME_OPTIONS))
+        print(boxed_list("Pet App", WELCOME_OPTIONS))
 
         response = input(INPUT_MESSAGE)
         print()
