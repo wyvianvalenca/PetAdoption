@@ -1,15 +1,15 @@
-from copy import deepcopy
 from .question import Question
 
 class Form:
     def __init__(self, applicant: str, pet: str, 
-                 questions_template: list[Question]):
+                 questions_template: list[tuple[str, list[str], str]]):
         self._applicant: str = applicant
         self._pet: str = pet
 
         self._questions: list[Question]
-        for question in questions_template:
-            self._questions.append(deepcopy(question))
+        for question, options, expected in questions_template:
+            q = Question(question, options, expected)
+            self._questions.append(q)
 
         self.score: float = 0
         self.status: str = "submitted"

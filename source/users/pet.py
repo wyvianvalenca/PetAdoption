@@ -1,4 +1,5 @@
-from source.users.user import User
+from source.users.adopter import Adopter
+from source.application.form import Form
 
 STATUS_SEQUENCE: dict[str, str] = {
     "rescued": "in treatment",
@@ -25,8 +26,8 @@ class Pet:
 
         self.application_form: dict[str, str | int] = {}
 
-        self.applications: dict[User, int] = {}
-        self._tutor: User | None = None
+        self.applications: list[Form] = []
+        self._tutor: Adopter | None = None
 
     @property
     def pet_type(self) -> str:
@@ -45,6 +46,21 @@ class Pet:
         self.status = STATUS_SEQUENCE[self.status.lower()]
 
         return None
+
+    def apply_to_adopt(self, user: Adopter, answers: dict[str, str],
+                       form_template: list[tuple[str, list[str], str]]
+                       ) -> str:
+        if self.status.lower() != "available for adoption":
+            return f"[FAIL] {self.name} is not available for adoption."
+
+        application = Form(user.username, self.name, form_template)
+        for question in application.questions:
+            if question.answer(answers[question.name]) == False:
+                return f"[FAIL] {answers[question.name]} is not an option for '{question.name}'."
+
+        self.applications.append(application)
+        user.applications.append(application)
+        return "[OK] Application submitted."
 
     def pet_strings(self) -> list[str]:
         pet_info: list[str] = []

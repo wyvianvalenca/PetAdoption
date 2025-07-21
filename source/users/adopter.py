@@ -1,4 +1,5 @@
 from source.users.user import User
+from source.application.form import Form
 
 class Adopter(User):
     def __init__(self, id: int, username: str, name: str):
@@ -8,7 +9,7 @@ class Adopter(User):
             'description': None
         })
 
-        # self.applications: dict[Pet, Application] = {}
+        self.applications: list[Form] = []
 
         self.allowed_posts.extend(["Forum", "Success Story"])
 
