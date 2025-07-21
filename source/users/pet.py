@@ -15,17 +15,15 @@ class Pet:
                  breed: str | None, 
                  fur_color: str | None):
         self.name: str = name.lower()
-        self.description: str | None = None
-        self.age: int | None = None
-
         self._pet_type: str = pet_type
         self.breed: str | None = breed
         self.fur_color: str | None = fur_color
 
+        self.age: int | None = None
+        self.description: str | None = None
+
         self._status: str = 'Rescued'
-
-        self.application_form: dict[str, str | int] = {}
-
+        self.form_template: list[tuple[str, list[str], str]] = []
         self.applications: list[Form] = []
         self._tutor: Adopter | None = None
 
@@ -47,13 +45,31 @@ class Pet:
 
         return None
 
-    def apply_to_adopt(self, user: Adopter, answers: dict[str, str],
-                       form_template: list[tuple[str, list[str], str]]
-                       ) -> str:
+    def add_question(self, name: str, options: list[str], 
+                     expected_answer: str) -> str:
+        if expected_answer not in options:
+            return f"[FAIL] Expected answer '{expected_answer}' is not a valid option."
+
+        question: tuple[str, list[str], str] = (name, options, expected_answer)
+        self.form_template.append(question)
+        return "[OK] Question added to form template."
+
+    def form_template_list(self) -> list[str]:
+        template_info: list[str] = []
+
+        for question, options, expected in self.form_template:
+            template_info.append(f"  > {question}")
+            for opt in options:
+                template_info.append(f"     + [ ] {opt}")
+            template_info.append(f"    Expected: {expected}")
+
+        return template_info
+
+    def apply_to_adopt(self, user: Adopter, answers: dict[str, str]) -> str:
         if self.status.lower() != "available for adoption":
             return f"[FAIL] {self.name} is not available for adoption."
 
-        application = Form(user.username, self.name, form_template)
+        application = Form(user.username, self.name, self.form_template)
         for question in application.questions:
             if question.answer(answers[question.name]) == False:
                 return f"[FAIL] {answers[question.name]} is not an option for '{question.name}'."
@@ -81,6 +97,7 @@ class Pet:
             pet_info.append(f"   - Age: {self.age}")
 
         pet_info.append(f"   - Status: {self.status}")
+        pet_info.append(f"   - Applications: {len(self.applications)}")
         pet_info.append("")
 
         return pet_info

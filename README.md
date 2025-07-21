@@ -58,15 +58,14 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 
 ## Functional Requirements
 - [ OK ] Allow adopters to search and filter pets
-- [ ] Create application class
+- [ OK ] Create application class
         > [ OK ] shelters can change pet's status to "available for adoption" 
-        > [ ] shelters can write questions to ask adopters
-        > [ ] shelters can define expected answers
-        > [ ] users can submit adoption application (answer questions writen by shelter)
-        > [ ] shelters can view all adopters that applied to adopt a pet, and their answers, and the compatibility with expected answers
-        > [ ] shelters can choose a adopter
+- [ OK ] Allow shelters to write questions to ask adopters
+        > [ OK ] shelters can define expected answers
 - [ ] Allow adopters to apply to adopt
 - [ ] Allow shelters to respond applications
+        > [ ] shelters can view all adopters that applied to adopt a pet, and their answers, and the compatibility with expected answers
+        > [ ] shelters can choose a adopter as tutor for a pet
 - [ ] Add initial posts
 - [ ] Update post printing (use formatted_menu)
 - [ ] Allow commenting posts

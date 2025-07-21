@@ -1,2 +1,2 @@
-import form
-import question
+from .form import Form
+from .question import Question

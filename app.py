@@ -36,9 +36,9 @@ SHELTER_OPTIONS = [
     "[2] - Create Events",
     "[3] - Add Pet Type",
     "[4] - Register New Pet",
-    "[4a] - Update Pet",
-    "[4b] - Write Application Form to Pet (WIP)",
-    "[5] - View Adoption Application (WIP)",
+    "[4a] - Update Pet's Profile",
+    "[4b] - Add question to Pet's Application",
+    "[5] - View Adoption Applications (WIP)",
     "[6] - Create Post",
     "[7] - View Social Feed",
     "[b] - Return to Welcome Page"
@@ -192,6 +192,7 @@ def create_post(user: User) -> None:
 # SHELTER'S TEXT UI FUNCTIONS
 
 def create_event(user: Shelter) -> None:
+    print(DIVIDER)
     print("\nLet's create an event!")
     name = input("Name: ")
     date = input("Date: ")
@@ -209,6 +210,7 @@ def add_pet_type(user: Shelter) -> None:
     return None
 
 def register_new_pet(user: Shelter) -> None:
+    print(DIVIDER)
     print("\n Let's register a new pet! Type it's info: \n")
     pet_name = input("Name: ")
     pet_type = input("Type (species): ")
@@ -221,29 +223,28 @@ def register_new_pet(user: Shelter) -> None:
 
     return None
 
-def find_pet(name: str, shelters_pets: list[Pet]) -> Pet | None:
-    for pet in shelters_pets:
-        if name.lower() == pet.name.lower():
-            return pet
+def find_pet(shelters_pets: list[Pet]) -> Pet | None:
+    while True:
+        name = input("\n> Pet Name: ")
 
-    return None
+        if name == "q":
+            return None
 
-def update_pet(pets: list[Pet]) -> None:
+        for pet in shelters_pets:
+            if name.lower() == pet.name.lower():
+                return pet
+
+        print("Pet Not Found! Try again or type q to quit.")
+
+def update_pet(shelter: Shelter) -> None:
     print(DIVIDER)
     print("\nLet's update a pet!",
           "First, let's find the pet you want to update.\n")
 
-    name = input("> Pet Name: ")
-    pet = find_pet(name, pets)
+    pet = find_pet(shelter.pets)
 
-    while pet is None:
-        print("Pet Not Found! Try again or type q to quit.")
-        name = input("> Pet Name: ")
-
-        if name == "q":
-            return
-
-        pet = find_pet(name, pets)
+    if pet == None:
+        return
 
     print(f"\nHere's {pet.name}'s current profile:")
     print(boxed_list("current info", pet.pet_strings()))
@@ -286,6 +287,55 @@ def update_pet(pets: list[Pet]) -> None:
 
     return
 
+def add_question(shelter: Shelter) -> None:
+    print(DIVIDER)
+    print("Let's add a new question to a pet's application form template!")
+
+    pet = find_pet(shelter.pets)
+
+    if pet == None:
+        return None
+
+    print("Here's the current form (it may be empty):")
+    print(boxed_list(f"Adoption Aplication template for {pet.name}", 
+                     pet.form_template_list()))
+
+    while True:
+        question: str = input("\n> Type a question or q to quit: ")
+
+        if question == "q":
+            break
+
+        print("\nNow let's add possible answers to this question.")
+
+        options: list[str] = []
+        while True:
+            option = input(">>> Type an anser or <s> to stop: ")
+
+            if option == "s":
+                break
+
+            options.append(option)
+
+        print("\nFinally, let's choose 'right' answer.")
+        expected: str = input("> Type the preferred option: ")
+
+        print(f"\nQuestion: {question}",
+              f"\nOptions: {options}",
+              f"\nExpected answer: {expected}\n")
+
+        confirm: str = input("Do you confirm adding this question to the form template? (y/n) ")
+        if confirm == "y":
+            print("")
+            print(pet.add_question(question, options, expected))
+
+    print("Here's the new form:")
+    print(boxed_list(f"{pet.name}'s Adoption Application Template", 
+                     pet.form_template_list()))
+
+    _ = input("Press any key to return do shelter's menu.")
+    return None
+
 SHELTER_MENU_FUNCTIONS = [
     ("1", "Update Profile", update_user_profile),
     ("2", "Create Events", create_event),
@@ -323,10 +373,10 @@ def shelter_menu(user: Shelter) -> None:
             register_new_pet(user)
 
         elif response == "4a":
-            update_pet(user.pets)
+            update_pet(user)
 
         elif response == "4b":
-            wip()
+            add_question(user)
 
         elif response == "5":
             wip()

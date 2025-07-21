@@ -6,7 +6,7 @@ class Form:
         self._applicant: str = applicant
         self._pet: str = pet
 
-        self._questions: list[Question]
+        self._questions: list[Question] = []
         for question, options, expected in questions_template:
             q = Question(question, options, expected)
             self._questions.append(q)

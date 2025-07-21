@@ -58,8 +58,8 @@ class Shelter(User):
     def print_allowed_pets(self) -> None:
         print(f"\n{self.name} shelters the following species: ", end=' ')
         for pet_type in self.pet_types:
-            print(pet_type, end=' ')
-        print()
+            print(pet_type, end=', ')
+        print(".")
 
     def print_user_profile(self) -> None:
         super().print_user_profile()
