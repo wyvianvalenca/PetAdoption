@@ -40,7 +40,7 @@ SHELTER_OPTIONS = [
     "[4b] - Add question to Pet's Application",
     "[5] - View Adoption Applications (WIP)",
     "[6] - Create Post",
-    "[7] - View Social Feed",
+    "[7] - ViewSocial Feed",
     "[b] - Return to Welcome Page"
 ]
 
@@ -76,13 +76,16 @@ def boxed_list(menu_name: str, menu_options: list[str]) -> str:
 
     box_width = 1 + left_padding + biggest_string + right_padding + 1
 
-    empty_line = indent + vertical_line + ((box_width - 2) * " ") + vertical_line + "\n"
-
     # header
     header:str = left_up_corner + ((2 + left_padding) * horizontal_line) + " " + menu_name.upper() + " "
     current_header_width = len(header)
     header = header + ((box_width - current_header_width - 1) * horizontal_line) + right_up_corner + "\n"
     header = indent + header
+
+    if len(header) - 3 > box_width:
+        box_width = len(header) - 3
+
+    empty_line = indent + vertical_line + ((box_width - 2) * " ") + vertical_line + "\n"
 
     # body
     body = ""
@@ -120,6 +123,17 @@ print(sh2.update_profile({
 }))
 
 pet1 = Pet("Becky", "Dog", "Chow Chow", "Orange")
+pet1.update_status()
+pet1.update_status()
+print(pet1.add_question("How many walks can you take her?", 
+                  ["0", "1", "2 or more"],
+                  "2 or more"))
+print(pet1.add_question("Can you train her?",
+                       ["I don't know how, but will learn",
+                        "I don't have time",
+                        "Yes"],
+                       "Yes"))
+
 pet2 = Pet("Tomas", "Cat", None, "Black")
 pet3 = Pet("Thor", "Dog", "Golden Retriever", "White")
 pet4 = Pet("Shiro", "Dog", None, "White")
@@ -247,7 +261,7 @@ def update_pet(shelter: Shelter) -> None:
         return
 
     print(f"\nHere's {pet.name}'s current profile:")
-    print(boxed_list("current info", pet.pet_strings()))
+    print(boxed_list("current info", pet.pet_list()))
 
     print("If you don't want to update something, just leave it blank.\n")
 
@@ -272,7 +286,7 @@ def update_pet(shelter: Shelter) -> None:
         pet.fur_color = new_fur
 
     while True:
-        new_status = input(f"> Do you want to update status from {pet.status} to {STATUS_SEQUENCE[pet.status.lower()].upper()} (y/n)? ")
+        new_status = input(f"> Do you want to update status from {pet.status} to {STATUS_SEQUENCE[pet.status.lower()].upper()}? [y/n] ")
 
         if new_status == "y":
             pet.update_status()
@@ -281,9 +295,9 @@ def update_pet(shelter: Shelter) -> None:
         break
 
     print(f"\nGreat! Here's {pet.name}'s new profile!")
-    print(boxed_list("new profile", pet.pet_strings()))
+    print(boxed_list("new profile", pet.pet_list()))
 
-    _ = input("Press any key to return do shelter's menu.")
+    _ = input("Press any key to return to shelter's menu.")
 
     return
 
@@ -297,7 +311,7 @@ def add_question(shelter: Shelter) -> None:
         return None
 
     print("Here's the current form (it may be empty):")
-    print(boxed_list(f"Adoption Aplication template for {pet.name}", 
+    print(boxed_list(f"{pet.name}'s Adoption Application Template", 
                      pet.form_template_list()))
 
     while True:
@@ -324,7 +338,7 @@ def add_question(shelter: Shelter) -> None:
               f"\nOptions: {options}",
               f"\nExpected answer: {expected}\n")
 
-        confirm: str = input("Do you confirm adding this question to the form template? (y/n) ")
+        confirm: str = input("Do you confirm adding this question to the form template? [y/n] ")
         if confirm == "y":
             print("")
             print(pet.add_question(question, options, expected))
@@ -333,7 +347,7 @@ def add_question(shelter: Shelter) -> None:
     print(boxed_list(f"{pet.name}'s Adoption Application Template", 
                      pet.form_template_list()))
 
-    _ = input("Press any key to return do shelter's menu.")
+    _ = input("Press any key to return to shelter's menu.")
     return None
 
 SHELTER_MENU_FUNCTIONS = [
@@ -352,7 +366,7 @@ def shelter_menu(user: Shelter) -> None:
     print(f"\nYou're logged in, {user.name}!\n")
 
     while True:
-        print(boxed_list("Adopter's menu", SHELTER_OPTIONS))
+        print(boxed_list("Shelter's menu", SHELTER_OPTIONS))
 
         response = input(INPUT_MESSAGE)
         print()
@@ -389,6 +403,8 @@ def shelter_menu(user: Shelter) -> None:
 
         else:
             print("\nInvalid Option.")
+
+        print(DIVIDER)
 
 # ADOPTER'S TEXT UI FUNCTIONS
 
@@ -473,7 +489,7 @@ def print_pets_list(pets: list[Pet]) -> None:
 
     pets_info: list[str] = []
     for pet in pets:
-        pets_info.extend(pet.pet_strings())
+        pets_info.extend(pet.pet_list())
 
     print(boxed_list("pets", pets_info))
 
@@ -513,7 +529,59 @@ def choose_filters(pets: list[Pet]
 
     return filters
 
-def print_all_pets(shelters: dict[str, Shelter]) -> None:
+def answer_question(number: int, question: str, options: list[str]) -> str:
+    formatted_question: list[str] = [f"> {question}"]
+
+    for opt in options:
+        formatted_question.append("   - " + opt)
+
+    while True:
+        print(boxed_list(f"Question No. {number}", formatted_question))
+
+        answer = input("> Type your answer: ")
+
+        if answer in options:
+            return answer
+
+        print(f"\n{answer} is not a valid option. Try again.")
+
+
+def apply_adoption(user: Adopter, shelters: dict[str, Shelter]) -> None:
+    print(DIVIDER)
+    print("Great! Let's adopt a pet!")
+
+    pets = all_pets(shelters)
+
+    pet = find_pet(pets)
+
+    if pet == None:
+        return None
+
+    if not pet.is_available():
+        print(f"\n[FAIL] {pet.name.title()} is not available for adoption.")
+        return None
+
+    if not pet.can_adopter_apply(user.username):
+        print(f"\n[FAIL] You already applied to adopt {pet.name.title()}.")
+        return None
+
+    print(boxed_list(f"{pet.name}'s adoption form", 
+                     [f"We're very glad that you want to adopt {pet.name.title()}",
+                      "Please answer the questions below.",
+                      "Always type your answer, and make sure it's exactly like one of the given options."])
+          )
+
+    answers: dict[str, str] = {}
+    count: int = 1
+
+    for question, options, _ in pet.form_template:
+        answers[question] = answer_question(count, question, options)
+        count += 1
+
+    print("\n" + pet.apply_to_adopt(user, answers))
+    return None
+
+def print_all_pets(user: Adopter, shelters: dict[str, Shelter]) -> None:
     print(DIVIDER)
 
     pets = all_pets(shelters)
@@ -521,10 +589,10 @@ def print_all_pets(shelters: dict[str, Shelter]) -> None:
     print_pets_list(pets)
 
     while True:
-        response = input("> Do you want to filter pets (y/n)? ")
+        response = input("> Do you want to filter pets? [y/n] ")
 
         if response == "y":
-            filtered_shelters = choose_shelters(accounts.users["Shelter"])
+            filtered_shelters = choose_shelters(shelters)
             filters = choose_filters(pets)
             filtered_pets = list(
                 search_pets(accounts.users, filtered_shelters, filters)
@@ -543,7 +611,16 @@ def print_all_pets(shelters: dict[str, Shelter]) -> None:
         elif response == "n":
             break
 
-    _ = input("Press any key to return do adopter's menu.")
+
+    while True:
+        response = input("\n> Do you want to adopt a pet? [y/n] ")
+
+        if response == "n":
+            break
+
+        apply_adoption(user, shelters)
+
+
 
 
 ADOPTER_MENU_FUNCTIONS = [
@@ -573,7 +650,7 @@ def adopter_menu(user: Adopter) -> None:
             print_all_shelters()
 
         elif response == "4":
-            print_all_pets(accounts.users["Shelter"])
+            print_all_pets(user, accounts.users["Shelter"])
 
         elif response == "5":
             wip()
@@ -586,6 +663,8 @@ def adopter_menu(user: Adopter) -> None:
 
         else:
             print("\nInvalid Option.\n")
+
+        print(DIVIDER)
 
 
 

@@ -60,15 +60,19 @@ class Pet:
         for question, options, expected in self.form_template:
             template_info.append(f"  > {question}")
             for opt in options:
-                template_info.append(f"     + [ ] {opt}")
+                template_info.append(f"     - {opt}")
             template_info.append(f"    Expected: {expected}")
 
         return template_info
 
-    def apply_to_adopt(self, user: Adopter, answers: dict[str, str]) -> str:
-        if self.status.lower() != "available for adoption":
-            return f"[FAIL] {self.name} is not available for adoption."
+    def can_adopter_apply(self, username: str) -> bool:
+        applicants: list[str] = [app.applicant for app in self.applications]
+        return not username in applicants
 
+    def is_available(self) -> bool:
+        return self.status.lower() == "available for adoption"
+
+    def apply_to_adopt(self, user: Adopter, answers: dict[str, str]) -> str:
         application = Form(user.username, self.name, self.form_template)
         for question in application.questions:
             if question.answer(answers[question.name]) == False:
@@ -78,7 +82,7 @@ class Pet:
         user.applications.append(application)
         return "[OK] Application submitted."
 
-    def pet_strings(self) -> list[str]:
+    def pet_list(self) -> list[str]:
         pet_info: list[str] = []
 
         pet_info.append(f"> {self.name.upper()}")

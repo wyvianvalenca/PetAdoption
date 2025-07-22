@@ -28,6 +28,12 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 - Adopters can list all pets
 - Adopters can filter pets
 
+### 25-07-21
+- Shelters can add questions to pet's application form
+
+### 25-07-22
+- Adopters can apply to adopt pets (by answering adoption form)
+
 # Features
 
 ## Adopters:
