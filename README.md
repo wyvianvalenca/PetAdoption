@@ -68,10 +68,11 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
         > [ OK ] shelters can change pet's status to "available for adoption" 
 - [ OK ] Allow shelters to write questions to ask adopters
         > [ OK ] shelters can define expected answers
-- [ ] Allow adopters to apply to adopt
+- [ OK ] Allow adopters to apply to adopt
 - [ ] Allow shelters to respond applications
         > [ ] shelters can view all adopters that applied to adopt a pet, and their answers, and the compatibility with expected answers
-        > [ ] shelters can choose a adopter as tutor for a pet
+        > [ ] shelters can choose an adopter as tutor for a pet
+- [ ] Allow adopters to all view their applications, compatibility rate and results
 - [ ] Add initial posts
 - [ ] Update post printing (use formatted_menu)
 - [ ] Allow commenting posts
