@@ -80,7 +80,9 @@ class Pet:
 
         self.applications.append(application)
         user.applications.append(application)
-        return "[OK] Application submitted."
+
+        print()
+        return (f"[OK] Application submitted.\nYou are a {application.compute_score() * 100:.2f}% match for {self.name.title()}")
 
     def pet_list(self) -> list[str]:
         pet_info: list[str] = []

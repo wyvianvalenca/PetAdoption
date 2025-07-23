@@ -61,6 +61,16 @@ class Shelter(User):
             print(pet_type, end=', ')
         print(".")
 
+    def applications_list(self) -> list[str]:
+        all_apps: list[str] = []
+        for pet in self.pets:
+            for application in pet.applications:
+                all_apps.extend(application.form_list())
+                all_apps.append("-" * 50)
+                all_apps.append("")
+
+        return all_apps
+
     def print_user_profile(self) -> None:
         super().print_user_profile()
         self.print_allowed_pets()

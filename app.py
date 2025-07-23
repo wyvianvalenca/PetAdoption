@@ -17,6 +17,8 @@ feed = Feed()
 
 DIVIDER = "\n" + ("=" * 80) + "\n"
 
+SMALL_DIVIDER = ("-" * 60)
+
 INPUT_MESSAGE = "> Choose an Option: "
 
 WELCOME_OPTIONS = [
@@ -38,7 +40,7 @@ SHELTER_OPTIONS = [
     "[4] - Register New Pet",
     "[4a] - Update Pet's Profile",
     "[4b] - Add question to Pet's Application",
-    "[5] - View Adoption Applications (WIP)",
+    "[5] - View Adoption Application",
     "[6] - Create Post",
     "[7] - ViewSocial Feed",
     "[b] - Return to Welcome Page"
@@ -49,7 +51,7 @@ ADOPTER_OPTIONS = [
     "[2] - View Events",
     "[3] - View Shelters",
     "[4] - View Pets",
-    "[5] - View Adoption Applications (WIP)",
+    "[5] - View Adoption Applications",
     "[6] - Create Post",
     "[7] - View Social Feed",
     "[b] - Return to Welcome Page"
@@ -59,7 +61,7 @@ def boxed_list(menu_name: str, menu_options: list[str]) -> str:
     left_padding: int  = 2
     right_padding: int = 5
 
-    indent = "  "
+    margin_left = "  "
 
     left_up_corner: str    = "╭"
     left_down_corner: str  = "╰"
@@ -80,12 +82,13 @@ def boxed_list(menu_name: str, menu_options: list[str]) -> str:
     header:str = left_up_corner + ((2 + left_padding) * horizontal_line) + " " + menu_name.upper() + " "
     current_header_width = len(header)
     header = header + ((box_width - current_header_width - 1) * horizontal_line) + right_up_corner + "\n"
-    header = indent + header
+    header = margin_left + header
 
     if len(header) - 3 > box_width:
         box_width = len(header) - 3
 
-    empty_line = indent + vertical_line + ((box_width - 2) * " ") + vertical_line + "\n"
+    # empty line for spacing
+    empty_line = margin_left + vertical_line + ((box_width - 2) * " ") + vertical_line + "\n"
 
     # body
     body = ""
@@ -93,12 +96,12 @@ def boxed_list(menu_name: str, menu_options: list[str]) -> str:
         line = vertical_line + (left_padding * " ") + opt
         current_width = len(line)
         line = line + ((box_width - current_width - 1) * " ") + vertical_line + "\n"
-        line = indent + line
+        line = margin_left + line
 
         body = body + line
 
     # footer
-    footer = indent + left_down_corner + ((box_width - 2) * horizontal_line) + right_down_corner
+    footer = margin_left + left_down_corner + ((box_width - 2) * horizontal_line) + right_down_corner
 
     return "\n" + header + empty_line + body + empty_line + footer + "\n"
 
@@ -111,7 +114,7 @@ sh1 = accounts.create_user("Shelter", "csf", "Casa São Francisco")
 sh2 = accounts.create_user("Shelter", "reptile_house", "Reptile's House")
 
 print(sh1.update_profile({
-    "description": "🏥 Veterinária Popular",
+    "description": "Veterinária Popular",
     "address": "R. dos Bandeirantes, 504 - Farol, Maceió - AL, 57051-120",
     "donation type": "PIX CNPJ",
     "donation code": "12.234.456/0001-01"
@@ -125,14 +128,24 @@ print(sh2.update_profile({
 pet1 = Pet("Becky", "Dog", "Chow Chow", "Orange")
 pet1.update_status()
 pet1.update_status()
-print(pet1.add_question("How many walks can you take her?", 
+_ = pet1.add_question("How many walks can you take her on everyday?", 
                   ["0", "1", "2 or more"],
-                  "2 or more"))
-print(pet1.add_question("Can you train her?",
+                  "2 or more")
+_ = pet1.add_question("Can you train her?",
                        ["I don't know how, but will learn",
                         "I don't have time",
                         "Yes"],
-                       "Yes"))
+                       "Yes")
+
+_ = pet1.apply_to_adopt(ad1, {
+    "How many walks can you take her on everyday?":"2 or more",
+    "Can you train her?":"Yes"
+})
+
+_ = pet1.apply_to_adopt(ad2, {
+    "How many walks can you take her on everyday?":"2 or more",
+    "Can you train her?":"I don't know how, but will learn"
+})
 
 pet2 = Pet("Tomas", "Cat", None, "Black")
 pet3 = Pet("Thor", "Dog", "Golden Retriever", "White")
@@ -201,6 +214,14 @@ def create_post(user: User) -> None:
         print("[OK] Post created")
     else:
         print("[FAIL] You can't post that.")
+
+def view_applications(header: str, apps: list[str]) -> None:
+    print(DIVIDER)
+
+    print(boxed_list(header, apps))
+
+    _ = input("Press any key to return to menu.")
+    return None
 
 
 # SHELTER'S TEXT UI FUNCTIONS
@@ -393,7 +414,8 @@ def shelter_menu(user: Shelter) -> None:
             add_question(user)
 
         elif response == "5":
-            wip()
+            view_applications(f"Adoption applications for pets at {user.name}",
+                              user.applications_list())
 
         elif response == "6":
             create_post(user)
@@ -613,7 +635,7 @@ def print_all_pets(user: Adopter, shelters: dict[str, Shelter]) -> None:
 
 
     while True:
-        response = input("\n> Do you want to adopt a pet? [y/n] ")
+        response = input("\n> Do you want to apply to adopt a pet? [y/n] ")
 
         if response == "n":
             break
@@ -653,7 +675,8 @@ def adopter_menu(user: Adopter) -> None:
             print_all_pets(user, accounts.users["Shelter"])
 
         elif response == "5":
-            wip()
+            view_applications(f"{user.name}'s adoption applications",
+                              user.applications_list())
 
         elif response == "6":
             create_post(user)
@@ -727,6 +750,8 @@ def welcome():
 
         else:
             print("Invalid option.")
+
+        print(DIVIDER)
 
     print("Goodbye!")
 

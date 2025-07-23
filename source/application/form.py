@@ -44,14 +44,19 @@ class Form:
         return False
 
     def form_list(self) -> list[str]:
-        form_info: list[str] = [f"> {self.applicant}'s application to adopt {self.pet}"]
+        """Formats all the forms info into a list, with each string being a line."""
+        form_info: list[str] = [
+            f"> {self.applicant}'s application to adopt {self.pet.title()}",
+            f"  - Questions:"
+        ]
 
         for question in self.questions:
-            form_info.append(f"  - {question.name}")
-            form_info.append(f"     + Expected Answer: {question.expected_answer}")
-            form_info.append(f"     + {self.applicant}'s Answer: {question.user_answer}")
+            form_info.append(f"    + {question.name}")
+            form_info.append(f"       * Preferred Answer: {question.expected_answer}")
+            form_info.append(f"       * {self.applicant}'s Answer: {question.user_answer}")
 
-        form_info.append(f"  - Score: {self.score}")
+        form_info.append(f"  - Compatibility: {self.compute_score() * 100:.2f}%")
         form_info.append(f"  - Status: {self.status.title()}")
+        form_info.append("")
 
         return form_info

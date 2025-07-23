@@ -34,6 +34,10 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 ### 25-07-22
 - Adopters can apply to adopt pets (by answering adoption form)
 
+### 25-07-23
+- Shelters can view all applications to adopt their pets
+- Adopters can view all their applications
+
 # Features
 
 ## Adopters:
@@ -70,13 +74,15 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
         > [ OK ] shelters can define expected answers
 - [ OK ] Allow adopters to apply to adopt
 - [ ] Allow shelters to respond applications
-        > [ ] shelters can view all adopters that applied to adopt a pet, and their answers, and the compatibility with expected answers
+        > [ OK ] shelters can view all adopters that applied to adopt a pet, and their answers, and the compatibility with expected answers
         > [ ] shelters can choose an adopter as tutor for a pet
-- [ ] Allow adopters to all view their applications, compatibility rate and results
+- [ OK ] Allow adopters to all view their applications, compatibility rate and results
 - [ ] Add initial posts
-- [ ] Update post printing (use formatted_menu)
+- [ ] Update post printing (use boxed_list)
 - [ ] Allow commenting posts
 - [ ] Allow liking posts
+- [ ] Allow users to donate to shelters
+- [ ] Allow shelters to view received donations
 
 ## Extra (ideas)
 - [ ] Filter events

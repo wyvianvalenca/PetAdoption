@@ -13,6 +13,13 @@ class Adopter(User):
 
         self.allowed_posts.extend(["Forum", "Success Story"])
 
-    def print_applications(self) -> None:
-        pass
+    def applications_list(self) -> list[str]:
+        all_apps: list[str] = []
+        for app in self.applications:
+            all_apps.extend(app.form_list())
+            all_apps.append("-" * 50)
+            all_apps.append("")
+
+        return all_apps
+
 

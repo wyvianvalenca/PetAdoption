@@ -32,7 +32,7 @@ class User:
         return self._user_profile
 
     def update_profile(self, new_data: dict[str, str]) -> str:
-        log = "The following fields were updated:"
+        log = f"The following fields were updated for {self.username}:"
         for field, data in new_data.items():
             if data:
                 self.user_profile[field] = data
