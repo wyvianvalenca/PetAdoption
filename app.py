@@ -1,6 +1,6 @@
 from source.application.form import Form
 from source.queries.search_pet import search_pets
-from source.socials import post
+from source.socials.post import Post
 from source.socials.feed import Feed
 from source.users.accounts import Accounts
 from source.users.adopter import Adopter
@@ -8,11 +8,6 @@ from source.users.pet import Pet
 from source.users.pet import STATUS_SEQUENCE
 from source.users.shelter import Shelter
 from source.users.user import User
-
-""" GLOBAL VARIABLES """
-
-accounts = Accounts()
-feed = Feed()
 
 """ OPTIONS AND FORMATTER """
 
@@ -106,7 +101,12 @@ def boxed_list(menu_name: str, menu_options: list[str]) -> str:
 
     return "\n" + header + empty_line + body + empty_line + footer + "\n"
 
-"""INITIAL DATA"""
+""" GLOBAL VARIABLES """
+
+accounts = Accounts()
+feed = Feed()
+
+""" INITIAL DATA """
 
 ad1 = accounts.create_user("Adopter", "wyvianvalenca", "Wyvian Valença")
 ad2 = accounts.create_user("Adopter", "ycarosales", "ycaro SALES")
@@ -169,9 +169,32 @@ sh1.add_events("Adoption Fair", "10/10/2025", "UFAL, Praça da Paz - Cidade Univ
 
 sh2.add_events("Turle Festival", "01/02/2026", "Praça Dois Leões - Jaraguá, Maceió")
 
+print(feed.create_post(sh1, "Educational", 
+                     "The Decompression Period: Giving Your New Pet Time to Adjust", 
+                     "Bringing a new pet home is an exciting time, but it's crucial to remember the '3-3-3 Rule' for rescue animals: 3 days to decompress, 3 weeks to learn your routine, and 3 months to feel truly at home. During the initial period, your new companion may be scared, shy, or unsure of their new surroundings. Avoid overwhelming them with visitors or new experiences, and instead focus on establishing a predictable routine with feeding, walks, and quiet time. This patience will build a strong foundation of trust and help your pet transition smoothly into a loving member of your family."))
+
+print(feed.create_post(sh2, "Educational", 
+                     "Understanding Dog Body Language: What is Your Pet Trying to Tell You?", 
+                     "A wagging tail doesn't always mean a happy dog. Understanding the subtle cues of canine body language is essential for preventing misunderstandings and building a strong bond. Pay attention to their ears, mouth, and overall posture. For example, a relaxed dog might have a loose body and a gently wagging tail, while a fearful dog might tuck its tail, flatten its ears, and lick its lips. Learning to read these signals will not only keep you and your pet safe but will also deepen your understanding of their needs and emotions."))
+
+print(feed.create_post(sh2, "Forum", 
+                     "Volunteers Needed for Our Upcoming 'Clear the Kennels' Adoption Drive!", 
+                     "Hello, pet-loving community! Sunny Paws Shelter is hosting our annual 'Clear the Kennels' adoption event in two weeks, and we're looking for enthusiastic volunteers to help make the day a success. We need help with tasks like walking dogs, managing the kitten playpen, and talking to potential adopters about our amazing animals. If you're available to lend a hand and want to help our residents find their forever homes, please let us know in the comments or send us a direct message for more information."))
+
+print(feed.create_post(ad1, "Forum", 
+                     "Advice Needed: Introducing My New Rescue Dog to My Resident Cat!", 
+                     "Hi everyone, we just brought home a wonderful 2-year-old beagle mix named Cooper, and we're so excited! We already have a 5-year-old cat, Whiskers, who is very calm but has never lived with a dog before. We are keeping them in separate rooms for now, but I was hoping to get some tips and hear about your experiences on how to make the first few weeks as smooth and stress-free as possible for both of them. Any advice would be greatly appreciated!"))
+
+print(feed.create_post(ad2, "Success Story", 
+                     "Our Shy Little Luna is Finally Blossoming!", 
+                     "When we first adopted Luna from the shelter three months ago, she would spend all day hiding under the bed and was too scared to even let us pet her. It broke our hearts to see how timid she was, but we decided to give her all the time and space she needed. Today, I'm overjoyed to share that Luna is a completely different cat! She now sleeps on our bed, greets us at the door with happy meows, and has even started playing with toys. Adopting a shy pet requires patience, but seeing her personality shine through has been the most rewarding experience of our lives."))
+
 """ TEXT UI FUNCTION """
 
 # USER'S TEXT UI FUNCTIONS
+
+def user_pause() -> None:
+    _ = input("Press <enter> to return.")
 
 def wip() -> None:
     print("We're still working on this option!")
@@ -217,6 +240,56 @@ def create_post(user: User) -> None:
         print("[FAIL] You can't post that.")
 
     return None
+
+def view_feed(message: str, posts: list[Post], user: User) -> None:
+    print(DIVIDER)
+    print(f"\n{message.upper()}:\n")
+
+    for id, post in enumerate(posts):
+        print(boxed_list(f"post id: {id}", post.post_list()))
+
+        while True:
+            action: str = input("\n> Type " + 
+                                "<q> to quit, " +
+                                "<n> to see next post, " +
+                                "<v> to view comments, " +
+                                "<c> to comment or " +
+                                "<l> to like: ")
+
+            if action == "q":
+                return None
+
+            elif action == "n":
+                break
+
+            elif action == "v":
+                view_feed(f"Comments for post '{post.title}'", 
+                          post.comments, user)
+
+            elif action == "c":
+                print()
+                title: str = input("Title: ")
+                content: str = input("Content: ")
+                c: Post = Post(user, "comment", title, content)
+                post.add_comment(c)
+                print("\n[OK] Comment added.")
+
+            elif action == "l":
+                post.like_post()
+                print("\n[OK] Post liked.")
+
+            else:
+                print("\nInvalid option. Try Again")
+
+    # print(boxed_list("social feed", all_posts))
+
+    print(f"\n{message.title()} ended.\n")
+    
+    print(DIVIDER)
+
+    user_pause()
+
+
 
 def deny_other_applications(apps: list[Form], accepted: int) -> None:
     for index, app in enumerate(apps):
@@ -270,7 +343,7 @@ def respond_application(adopters: dict[str, Adopter], shelter: Shelter) -> bool:
             if form.approve():
                 pet.update_status()
                 pet.tutor = applicant
-                print(f"[OK] Application aprooved! {form.applicant} is {form.pet}'s new tutor")
+                print(f"[OK] Application approved! {form.applicant} is {form.pet}'s new tutor")
 
                 deny_other_applications(pets_apps, app_index)
 
@@ -389,7 +462,7 @@ def update_pet(shelter: Shelter) -> None:
     print(f"\nGreat! Here's {pet.name}'s new profile!")
     print(boxed_list("new profile", pet.pet_list()))
 
-    _ = input("Press <enter> to return to shelter's menu.")
+    user_pause()
 
     return
 
@@ -439,7 +512,8 @@ def add_question(shelter: Shelter) -> None:
     print(boxed_list(f"{pet.name}'s Adoption Application Template", 
                      pet.form_template_list()))
 
-    _ = input("Press <enter> to return to shelter's menu.")
+    user_pause()
+
     return None
 
 SHELTER_MENU_FUNCTIONS = [
@@ -450,7 +524,7 @@ SHELTER_MENU_FUNCTIONS = [
     ("4a", "Update Pet Profile", update_pet),
     ("5", "[WIP] View Adoption Applications", wip),
     ("6", "Create Post", create_post),
-    ("7", "Open Social Feed", feed.view_feed)
+    ("7", "Open Social Feed", view_feed)
 ]
 
 def shelter_menu(user: Shelter) -> None:
@@ -495,10 +569,12 @@ def shelter_menu(user: Shelter) -> None:
             create_post(user)
 
         elif response == "7":
-            feed.view_feed()
+            view_feed("social feed", 
+                      [post for post in feed.posts.values()], 
+                      user)
 
         else:
-            print("\nInvalid Option.")
+            print("\nInvalid option.")
 
         print(DIVIDER)
 
@@ -518,7 +594,7 @@ def print_all_events() -> None:
 
     print(boxed_list("events", all_events))
 
-    _ = input("Press <enter> to return to adopter's menu.")
+    user_pause()
 
     return None
 
@@ -539,7 +615,7 @@ def print_all_shelters() -> None:
 
     print(boxed_list("shelters", all_shelters))
 
-    _ = input("Press <enter> to return to adopter's menu.")
+    user_pause()
 
     return None
 
@@ -752,13 +828,15 @@ def adopter_menu(user: Adopter) -> None:
             view_applications(f"{user.name}'s adoption applications",
                               user.applications_list())
 
-            _ = input("Press <enter> to return to adopter's menu.")
+            user_pause()
 
         elif response == "6":
             create_post(user)
 
         elif response == "7":
-            feed.view_feed()
+            view_feed("social feed", 
+                      [post for post in feed.posts.values()], 
+                      user)
 
         else:
             print("\nInvalid option.\n")

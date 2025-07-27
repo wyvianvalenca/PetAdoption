@@ -26,7 +26,7 @@ class ViewPost(Vertical):
     @on(Button.Pressed, "#like")
     def handle_like(self, event: Button.Pressed) -> None:
         _ = event.stop()
-        self.post.likePost()
+        self.post.like_post()
 
 class ViewFeed(App):
     def __init__(self, feed: Feed, **kwargs):

@@ -38,6 +38,12 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 - Shelters can view all applications to adopt their pets
 - Adopters can view all their applications
 
+### 25-07-27
+- Shelters can respond adopter's applications (approve or deny) and provide feedback for denied applications.
+- Better post printing
+- Users can like and comment posts
+- Users can see a post's comments and also like and comment a comment
+
 # Features
 
 ## Adopters:
@@ -73,14 +79,14 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 - [ OK ] Allow shelters to write questions to ask adopters
         > [ OK ] shelters can define expected answers
 - [ OK ] Allow adopters to apply to adopt
-- [ ] Allow shelters to respond applications
+- [ OK ] Allow shelters to respond applications
         > [ OK ] shelters can view all adopters that applied to adopt a pet, and their answers, and the compatibility with expected answers
         > [ OK ] shelters can choose an adopter as tutor for a pet
 - [ OK ] Allow adopters to all view their applications, compatibility rate and results
-- [ ] Add initial posts
-- [ ] Update post printing (use boxed_list)
-- [ ] Allow commenting posts
-- [ ] Allow liking posts
+- [ OK ] Add initial posts
+- [ OK ] Update post printing (use boxed_list)
+- [ OK ] Allow commenting posts
+- [ OK ] Allow liking posts
 - [ ] Allow users to donate to shelters
 - [ ] Allow shelters to view received donations
 - [ ] Change profile printing (use boxed_list())
