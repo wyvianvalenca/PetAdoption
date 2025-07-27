@@ -1,3 +1,4 @@
+from source.application.form import Form
 from source.queries.search_pet import search_pets
 from source.socials import post
 from source.socials.feed import Feed
@@ -215,12 +216,82 @@ def create_post(user: User) -> None:
     else:
         print("[FAIL] You can't post that.")
 
+    return None
+
+def deny_other_applications(apps: list[Form], accepted: int) -> None:
+    for index, app in enumerate(apps):
+        if index != accepted and app.status == "submitted":
+            feedback: str = input(f"\n> Give {app.applicant} a feedback as to why their application was denied: ")
+            print()
+
+            if app.deny(feedback):
+                print("[OK] Application denied.")
+            else:
+                print(f"[FAIL] This application's status is already {app.status}")
+
+    return None
+
+
+def respond_application(adopters: dict[str, Adopter], shelter: Shelter) -> bool:
+    """Handles application processing. Return True if everything's OK and False if the user's input was wrong and we need to call the function again."""
+    app_id: str = input("> Type an application's code (like 0-0, 1-2) to process it or <q> to quit: ")
+
+    if app_id == "q":
+        return True
+
+    try:
+        pet_index, app_index = [int(x) for x in app_id.split("-")]
+    except ValueError:
+        return False
+
+    try:
+        pet: Pet = shelter.pets[pet_index]
+        pets_apps: list[Form] = pet.applications
+    except IndexError:
+        return False
+
+    try:
+        form: Form = pets_apps[app_index]
+        applicant: User = adopters[form.applicant]
+    except IndexError:
+        return False
+
+    print(f"\nYou choose {form.applicant}'s applicatiion for {form.pet.title()}")
+
+    profile = input(f"\n> Do you wish to see {form.applicant}'s profile? [y/n] ")
+    if profile == "y":
+        print()
+        applicant.print_user_profile()
+        print()
+
+    while True:
+        result = input(f"> Do you approve {form.applicant}'s application? [y/n/q] ")
+        if result == "y":
+            if form.approve():
+                pet.update_status()
+                pet.tutor = applicant
+                print(f"[OK] Application aprooved! {form.applicant} is {form.pet}'s new tutor")
+
+                deny_other_applications(pets_apps, app_index)
+
+            break
+
+        elif result == "n":
+            deny_other_applications([form], -1)
+            break
+
+        elif result == "q":
+            break
+
+        print("\nInvalid option. Try again.\n")
+
+    return True
+
 def view_applications(header: str, apps: list[str]) -> None:
     print(DIVIDER)
 
     print(boxed_list(header, apps))
 
-    _ = input("Press any key to return to menu.")
     return None
 
 
@@ -318,7 +389,7 @@ def update_pet(shelter: Shelter) -> None:
     print(f"\nGreat! Here's {pet.name}'s new profile!")
     print(boxed_list("new profile", pet.pet_list()))
 
-    _ = input("Press any key to return to shelter's menu.")
+    _ = input("Press <enter> to return to shelter's menu.")
 
     return
 
@@ -368,7 +439,7 @@ def add_question(shelter: Shelter) -> None:
     print(boxed_list(f"{pet.name}'s Adoption Application Template", 
                      pet.form_template_list()))
 
-    _ = input("Press any key to return to shelter's menu.")
+    _ = input("Press <enter> to return to shelter's menu.")
     return None
 
 SHELTER_MENU_FUNCTIONS = [
@@ -417,6 +488,9 @@ def shelter_menu(user: Shelter) -> None:
             view_applications(f"Adoption applications for pets at {user.name}",
                               user.applications_list())
 
+            while not respond_application(accounts.users["Adopter"], user):
+                print("\nInvalid code. Try again.\n")
+
         elif response == "6":
             create_post(user)
 
@@ -444,7 +518,7 @@ def print_all_events() -> None:
 
     print(boxed_list("events", all_events))
 
-    _ = input("Press any key to return to adopter's menu.")
+    _ = input("Press <enter> to return to adopter's menu.")
 
     return None
 
@@ -465,7 +539,7 @@ def print_all_shelters() -> None:
 
     print(boxed_list("shelters", all_shelters))
 
-    _ = input("Press any key to return to adopter's menu.")
+    _ = input("Press <enter> to return to adopter's menu.")
 
     return None
 
@@ -678,6 +752,8 @@ def adopter_menu(user: Adopter) -> None:
             view_applications(f"{user.name}'s adoption applications",
                               user.applications_list())
 
+            _ = input("Press <enter> to return to adopter's menu.")
+
         elif response == "6":
             create_post(user)
 
@@ -685,7 +761,7 @@ def adopter_menu(user: Adopter) -> None:
             feed.view_feed()
 
         else:
-            print("\nInvalid Option.\n")
+            print("\nInvalid option.\n")
 
         print(DIVIDER)
 
@@ -749,7 +825,7 @@ def welcome():
             break
 
         else:
-            print("Invalid option.")
+            print("Invalid option. Try again.")
 
         print(DIVIDER)
 

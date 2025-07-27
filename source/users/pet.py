@@ -25,7 +25,7 @@ class Pet:
         self._status: str = 'Rescued'
         self.form_template: list[tuple[str, list[str], str]] = []
         self.applications: list[Form] = []
-        self._tutor: Adopter | None = None
+        self.tutor: Adopter
 
     @property
     def pet_type(self) -> str:
@@ -103,7 +103,12 @@ class Pet:
             pet_info.append(f"   - Age: {self.age}")
 
         pet_info.append(f"   - Status: {self.status}")
-        pet_info.append(f"   - Applications: {len(self.applications)}")
+
+        if self.status.lower() == "adopted":
+            pet_info.append(f"   - Tutor: {self.tutor.name}")
+        else:
+            pet_info.append(f"   - Applications: {len(self.applications)}")
+
         pet_info.append("")
 
         return pet_info

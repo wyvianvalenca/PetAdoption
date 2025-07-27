@@ -15,8 +15,8 @@ class Adopter(User):
 
     def applications_list(self) -> list[str]:
         all_apps: list[str] = []
-        for app in self.applications:
-            all_apps.extend(app.form_list())
+        for index, app in enumerate(self.applications):
+            all_apps.extend(app.form_list(str(index)))
             all_apps.append("-" * 50)
             all_apps.append("")
 

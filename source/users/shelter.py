@@ -63,9 +63,9 @@ class Shelter(User):
 
     def applications_list(self) -> list[str]:
         all_apps: list[str] = []
-        for pet in self.pets:
-            for application in pet.applications:
-                all_apps.extend(application.form_list())
+        for pet_index, pet in enumerate(self.pets):
+            for app_index, application in enumerate(pet.applications):
+                all_apps.extend(application.form_list(f"{pet_index}-{app_index}"))
                 all_apps.append("-" * 50)
                 all_apps.append("")
 

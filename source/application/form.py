@@ -13,6 +13,7 @@ class Form:
 
         self.score: float = 0
         self.status: str = "submitted"
+        self.feedback: str = ""
 
     @property
     def applicant(self) -> str:
@@ -39,14 +40,23 @@ class Form:
     def approve(self) -> bool:
         if self.status == "submitted":
             self.status = "approved"
+            self.feedback = f"Congratulations! You're {self.pet}'s new tutor!" 
             return True
 
         return False
 
-    def form_list(self) -> list[str]:
+    def deny(self, reason: str) -> bool:
+        if self.status == "submitted":
+            self.status = "denied"
+            self.feedback = reason
+            return True
+        
+        return False
+
+    def form_list(self, cod: str) -> list[str]:
         """Formats all the forms info into a list, with each string being a line."""
         form_info: list[str] = [
-            f"> {self.applicant}'s application to adopt {self.pet.title()}",
+            f"> [{cod}] {self.applicant}'s application to adopt {self.pet.title()}",
             f"  - Questions:"
         ]
 
@@ -56,7 +66,11 @@ class Form:
             form_info.append(f"       * {self.applicant}'s Answer: {question.user_answer}")
 
         form_info.append(f"  - Compatibility: {self.compute_score() * 100:.2f}%")
-        form_info.append(f"  - Status: {self.status.title()}")
+        form_info.append(f"  - Status: {self.status.upper()}")
+
+        if self.status.lower() == "denied":
+            form_info.append(f"  - Feedback: {self.feedback}")
+
         form_info.append("")
 
         return form_info

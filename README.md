@@ -75,7 +75,7 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 - [ OK ] Allow adopters to apply to adopt
 - [ ] Allow shelters to respond applications
         > [ OK ] shelters can view all adopters that applied to adopt a pet, and their answers, and the compatibility with expected answers
-        > [ ] shelters can choose an adopter as tutor for a pet
+        > [ OK ] shelters can choose an adopter as tutor for a pet
 - [ OK ] Allow adopters to all view their applications, compatibility rate and results
 - [ ] Add initial posts
 - [ ] Update post printing (use boxed_list)
@@ -83,12 +83,19 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 - [ ] Allow liking posts
 - [ ] Allow users to donate to shelters
 - [ ] Allow shelters to view received donations
+- [ ] Change profile printing (use boxed_list())
+
+## Bugs
+- [ ] Pet status AVAILABLE FOR ADOPTION but no aplication form registered
+        > ask for questions immediatly after changing status to AVAILABLE FOR ADOPTION
+        > OR register standard form for all pets
 
 ## Extra (ideas)
 - [ ] Filter events
 - [ ] Order events by date
 - [ ] Filter social posts
 - [ ] Clean screen after each operation
+- [ ] Allow adding standard question to all application forms in the shelter
 
 # Author
 Wyvian Valença
