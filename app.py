@@ -114,21 +114,22 @@ ad2 = accounts.create_user("Adopter", "ycarosales", "ycaro SALES")
 sh1 = accounts.create_user("Shelter", "csf", "Casa São Francisco")
 sh2 = accounts.create_user("Shelter", "reptile_house", "Reptile's House")
 
-print(sh1.update_profile({
+_ = sh1.update_profile({
     "description": "Veterinária Popular",
     "address": "R. dos Bandeirantes, 504 - Farol, Maceió - AL, 57051-120",
     "donation type": "PIX CNPJ",
     "donation code": "12.234.456/0001-01"
-}))
+})
 
-print(sh2.update_profile({
+_ = sh2.update_profile({
     "description": "Amamos repteis!!!!",
     "address": "R. dos Repteis, 111 - Fatol, Maceió"
-}))
+})
 
 pet1 = Pet("Becky", "Dog", "Chow Chow", "Orange")
 pet1.update_status()
 pet1.update_status()
+
 _ = pet1.add_question("How many walks can you take her on everyday?", 
                   ["0", "1", "2 or more"],
                   "2 or more")
@@ -169,23 +170,23 @@ sh1.add_events("Adoption Fair", "10/10/2025", "UFAL, Praça da Paz - Cidade Univ
 
 sh2.add_events("Turle Festival", "01/02/2026", "Praça Dois Leões - Jaraguá, Maceió")
 
-print(feed.create_post(sh1, "Educational", 
+_ = feed.create_post(sh1, "Educational", 
                      "The Decompression Period: Giving Your New Pet Time to Adjust", 
-                     "Bringing a new pet home is an exciting time, but it's crucial to remember the '3-3-3 Rule' for rescue animals: 3 days to decompress, 3 weeks to learn your routine, and 3 months to feel truly at home. During the initial period, your new companion may be scared, shy, or unsure of their new surroundings. Avoid overwhelming them with visitors or new experiences, and instead focus on establishing a predictable routine with feeding, walks, and quiet time. This patience will build a strong foundation of trust and help your pet transition smoothly into a loving member of your family."))
+                     "Bringing a new pet home is an exciting time, but it's crucial to remember the '3-3-3 Rule' for rescue animals: 3 days to decompress, 3 weeks to learn your routine, and 3 months to feel truly at home. During the initial period, your new companion may be scared, shy, or unsure of their new surroundings. Avoid overwhelming them with visitors or new experiences, and instead focus on establishing a predictable routine with feeding, walks, and quiet time. This patience will build a strong foundation of trust and help your pet transition smoothly into a loving member of your family.")
 
-print(feed.create_post(sh2, "Educational", 
+_ = (feed.create_post(sh2, "Educational", 
                      "Understanding Dog Body Language: What is Your Pet Trying to Tell You?", 
                      "A wagging tail doesn't always mean a happy dog. Understanding the subtle cues of canine body language is essential for preventing misunderstandings and building a strong bond. Pay attention to their ears, mouth, and overall posture. For example, a relaxed dog might have a loose body and a gently wagging tail, while a fearful dog might tuck its tail, flatten its ears, and lick its lips. Learning to read these signals will not only keep you and your pet safe but will also deepen your understanding of their needs and emotions."))
 
-print(feed.create_post(sh2, "Forum", 
+_ = (feed.create_post(sh2, "Forum", 
                      "Volunteers Needed for Our Upcoming 'Clear the Kennels' Adoption Drive!", 
                      "Hello, pet-loving community! Sunny Paws Shelter is hosting our annual 'Clear the Kennels' adoption event in two weeks, and we're looking for enthusiastic volunteers to help make the day a success. We need help with tasks like walking dogs, managing the kitten playpen, and talking to potential adopters about our amazing animals. If you're available to lend a hand and want to help our residents find their forever homes, please let us know in the comments or send us a direct message for more information."))
 
-print(feed.create_post(ad1, "Forum", 
+_ = (feed.create_post(ad1, "Forum", 
                      "Advice Needed: Introducing My New Rescue Dog to My Resident Cat!", 
                      "Hi everyone, we just brought home a wonderful 2-year-old beagle mix named Cooper, and we're so excited! We already have a 5-year-old cat, Whiskers, who is very calm but has never lived with a dog before. We are keeping them in separate rooms for now, but I was hoping to get some tips and hear about your experiences on how to make the first few weeks as smooth and stress-free as possible for both of them. Any advice would be greatly appreciated!"))
 
-print(feed.create_post(ad2, "Success Story", 
+_ = (feed.create_post(ad2, "Success Story", 
                      "Our Shy Little Luna is Finally Blossoming!", 
                      "When we first adopted Luna from the shelter three months ago, she would spend all day hiding under the bed and was too scared to even let us pet her. It broke our hearts to see how timid she was, but we decided to give her all the time and space she needed. Today, I'm overjoyed to share that Luna is a completely different cat! She now sleeps on our bed, greets us at the door with happy meows, and has even started playing with toys. Adopting a shy pet requires patience, but seeing her personality shine through has been the most rewarding experience of our lives."))
 

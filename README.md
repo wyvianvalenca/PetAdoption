@@ -55,9 +55,10 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
     - Apply to Adoption
 - List Adoption Applications
 - Social features
-    - List Educational Resources
+    - View Educational Resources
     - CRUD Success Stories
     - CRUD Forum Posts
+    - Comment posts
 
 ## Shelters
 - Create & Update Profile
@@ -69,19 +70,20 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
     - CRUD Educational Resources
     - View Success Stories
     - CRUD Forum Posts
+    - Comment posts
 
 # TO-DO:
 
 ## Functional Requirements
 - [ OK ] Allow adopters to search and filter pets
 - [ OK ] Create application class
-        > [ OK ] shelters can change pet's status to "available for adoption" 
+    > [ OK ] shelters can change pet's status to "available for adoption" 
 - [ OK ] Allow shelters to write questions to ask adopters
-        > [ OK ] shelters can define expected answers
+    > [ OK ] shelters can define expected answers
 - [ OK ] Allow adopters to apply to adopt
 - [ OK ] Allow shelters to respond applications
-        > [ OK ] shelters can view all adopters that applied to adopt a pet, and their answers, and the compatibility with expected answers
-        > [ OK ] shelters can choose an adopter as tutor for a pet
+    > [ OK ] shelters can view all adopters that applied to adopt a pet, and their answers, and the compatibility with expected answers
+    > [ OK ] shelters can choose an adopter as tutor for a pet
 - [ OK ] Allow adopters to all view their applications, compatibility rate and results
 - [ OK ] Add initial posts
 - [ OK ] Update post printing (use boxed_list)
@@ -93,8 +95,9 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 
 ## Bugs
 - [ ] Pet status AVAILABLE FOR ADOPTION but no aplication form registered
-        > ask for questions immediatly after changing status to AVAILABLE FOR ADOPTION
-        > OR register standard form for all pets
+    > ask for questions immediatly after changing status to AVAILABLE FOR ADOPTION
+    > OR register standard form for all pets
+- [ ] No system feedback after responding a application (success or failure messages)
 
 ## Extra (ideas)
 - [ ] Filter events
