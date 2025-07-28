@@ -12,9 +12,12 @@ class Shelter(User):
             'donation code': None
         })
 
+        self._donations: dict[str, float] = {}
+
         self._pet_types: dict[str, list[str]] = {}
         self._pets: list[Pet] = []
         self._events: list[Event] = []
+
         self.allowed_posts.extend(["Forum", "Educational"])
 
     @property
@@ -70,6 +73,33 @@ class Shelter(User):
                 all_apps.append("")
 
         return all_apps
+
+    @property
+    def donations(self) -> dict[str, float]:
+        return self._donations
+
+    def donate(self, donor: str, ammount: float) -> str:
+        self.donations[donor] = self.donations.get(donor, 0) + ammount
+        return "[OK] Donation registered. Thank you!"
+
+    def total_donations(self) -> float:
+        total: float = 0.0
+        for donation in self.donations.values():
+            total = total + donation
+
+        return total
+
+    def biggest_donor(self) -> dict[str, float]:
+        greatest_total: float = 0.0
+        greatest_donor: str = "None"
+
+        for donor, donation in self.donations.items():
+            if donation > greatest_total:
+                greatest_total = donation
+                greatest_donor = donor
+                
+
+        return {greatest_donor: greatest_total}
 
     def print_user_profile(self) -> None:
         super().print_user_profile()

@@ -599,12 +599,13 @@ def print_all_events() -> None:
 
     return None
 
-def print_all_shelters() -> None:
-    all_shelters: list[str] = []
-    for shelter in accounts.users["Shelter"].values():
-        shelter_info = []
+def print_all_shelters(user: User, shelters: list[Shelter]) -> None:
+    username: str = user.username
 
-        shelter_info.append(f"> {shelter.name.upper()}")
+    all_shelters: list[str] = []
+
+    for id, shelter in enumerate(shelters):
+        shelter_info: list[str] = [f"> [{id}] {shelter.name.upper()}"]
 
         for field, info in shelter.user_profile.items():
             if info:
@@ -616,7 +617,33 @@ def print_all_shelters() -> None:
 
     print(boxed_list("shelters", all_shelters))
 
-    user_pause()
+    while True:
+        donate = input("> Do you wish to make a donation to a shelter? [y/n]")
+
+        if donate == "y":
+
+            try:
+                shelter_index: int = int(input("> Type a shelter's code: "))
+            except ValueError:
+                print("\nInvalid code. Try again\n")
+                continue
+
+            try:
+                donation_receiver: Shelter = shelters[shelter_index]
+            except IndexError:
+                print("\nInvalid code. Try again\n")
+                continue
+
+            while True:
+                try:
+                    ammount: float = float(input("> How much do you wish to donate? [type only numbers] "))
+                    print("\n" + donation_receiver.donate(username, ammount) + "\n")
+                    break
+                except ValueError:
+                    print("\nInvalid code. Try again\n")
+                    continue
+
+            break
 
     return None
 
@@ -820,7 +847,8 @@ def adopter_menu(user: Adopter) -> None:
             print_all_events()
 
         elif response == "3":
-            print_all_shelters()
+            print_all_shelters(user, 
+                               [s for s in accounts.users["Shelter"].values()])
 
         elif response == "4":
             print_all_pets(user, accounts.users["Shelter"])

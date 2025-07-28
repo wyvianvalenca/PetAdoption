@@ -75,7 +75,7 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 # TO-DO:
 
 ## Functional Requirements
-- [ OK ] Allow adopters to search and filter pets
+- [ OK ] Allow adopters to search and filter peto
 - [ OK ] Create application class
     > [ OK ] shelters can change pet's status to "available for adoption" 
 - [ OK ] Allow shelters to write questions to ask adopters
@@ -89,7 +89,7 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 - [ OK ] Update post printing (use boxed_list)
 - [ OK ] Allow commenting posts
 - [ OK ] Allow liking posts
-- [ ] Allow users to donate to shelters
+- [ OK ] Allow users to donate to shelters
 - [ ] Allow shelters to view received donations
 - [ ] Change profile printing (use boxed_list())
 
