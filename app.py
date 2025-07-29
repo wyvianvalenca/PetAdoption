@@ -38,7 +38,8 @@ SHELTER_OPTIONS = [
     "[4b] - Add question to Pet's Application",
     "[5] - View Adoption Application",
     "[6] - Create Post",
-    "[7] - ViewSocial Feed",
+    "[7] - View Social Feed",
+    "[8] - View Donations",
     "[b] - Return to Welcome Page"
 ]
 
@@ -282,15 +283,11 @@ def view_feed(message: str, posts: list[Post], user: User) -> None:
             else:
                 print("\nInvalid option. Try Again")
 
-    # print(boxed_list("social feed", all_posts))
-
     print(f"\n{message.title()} ended.\n")
     
     print(DIVIDER)
 
     user_pause()
-
-
 
 def deny_other_applications(apps: list[Form], accepted: int) -> None:
     for index, app in enumerate(apps):
@@ -304,7 +301,6 @@ def deny_other_applications(apps: list[Form], accepted: int) -> None:
                 print(f"[FAIL] This application's status is already {app.status}")
 
     return None
-
 
 def respond_application(adopters: dict[str, Adopter], shelter: Shelter) -> bool:
     """Handles application processing. Return True if everything's OK and False if the user's input was wrong and we need to call the function again."""
@@ -367,7 +363,6 @@ def view_applications(header: str, apps: list[str]) -> None:
     print(boxed_list(header, apps))
 
     return None
-
 
 # SHELTER'S TEXT UI FUNCTIONS
 
@@ -517,16 +512,23 @@ def add_question(shelter: Shelter) -> None:
 
     return None
 
-SHELTER_MENU_FUNCTIONS = [
-    ("1", "Update Profile", update_user_profile),
-    ("2", "Create Events", create_event),
-    ("3", "Add Pet Type", add_pet_type),
-    ("4", "Register New Pet", register_new_pet),
-    ("4a", "Update Pet Profile", update_pet),
-    ("5", "[WIP] View Adoption Applications", wip),
-    ("6", "Create Post", create_post),
-    ("7", "Open Social Feed", view_feed)
-]
+def show_donations(shelter: Shelter) -> None:
+    print(boxed_list("donations", shelter.donations_list()))
+
+    user_pause()
+
+    return None
+
+# SHELTER_MENU_FUNCTIONS = [
+#     ("1", "Update Profile", update_user_profile),
+#     ("2", "Create Events", create_event),
+#     ("3", "Add Pet Type", add_pet_type),
+#     ("4", "Register New Pet", register_new_pet),
+#     ("4a", "Update Pet Profile", update_pet),
+#     ("5", "[WIP] View Adoption Applications", wip),
+#     ("6", "Create Post", create_post),
+#     ("7", "Open Social Feed", view_feed)
+# ]
 
 def shelter_menu(user: Shelter) -> None:
     print(DIVIDER)
@@ -573,6 +575,9 @@ def shelter_menu(user: Shelter) -> None:
             view_feed("social feed", 
                       [post for post in feed.posts.values()], 
                       user)
+        
+        elif response == "8":
+            show_donations(user)
 
         else:
             print("\nInvalid option.")
@@ -618,34 +623,42 @@ def print_all_shelters(user: User, shelters: list[Shelter]) -> None:
     print(boxed_list("shelters", all_shelters))
 
     while True:
-        donate = input("> Do you wish to make a donation to a shelter? [y/n]")
+        donate = input("> Do you wish to make a donation to a shelter? [y/n] ")
 
         if donate == "y":
 
             try:
-                shelter_index: int = int(input("> Type a shelter's code: "))
+                shelter_index: int = int(input("\n> Type a shelter's code: "))
             except ValueError:
-                print("\nInvalid code. Try again\n")
-                continue
-
-            try:
-                donation_receiver: Shelter = shelters[shelter_index]
-            except IndexError:
                 print("\nInvalid code. Try again\n")
                 continue
 
             while True:
                 try:
-                    ammount: float = float(input("> How much do you wish to donate? [type only numbers] "))
-                    print("\n" + donation_receiver.donate(username, ammount) + "\n")
+                    donation_receiver: Shelter = shelters[shelter_index]
                     break
-                except ValueError:
+                except IndexError:
                     print("\nInvalid code. Try again\n")
                     continue
 
-            break
+            while True:
+                try:
+                    ammount: float = float(
+                        input(
+                            f"\n> How much do you wish to donate to {donation_receiver.name}? "))
+                    print("\n" 
+                          + donation_receiver.donate(username, ammount) 
+                          + "\n\n")
+                    break
+                except ValueError:
+                    print("\nInvalid answer. Type a number\n")
+                    continue
 
-    return None
+        elif donate == "n":
+            return None
+
+        else:
+            print("\nInvalid code. Try again\n")
 
 def choose_shelters(shelters: dict[str, Shelter]) -> list[str] | None:
     all_shelters: list[str] = []

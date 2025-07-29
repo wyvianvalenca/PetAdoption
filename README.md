@@ -44,6 +44,10 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 - Users can like and comment posts
 - Users can see a post's comments and also like and comment a comment
 
+### 25-07-29
+- Adopters can donate to shelters
+- Shelters can view their received donations
+
 # Features
 
 ## Adopters:
@@ -90,7 +94,7 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 - [ OK ] Allow commenting posts
 - [ OK ] Allow liking posts
 - [ OK ] Allow users to donate to shelters
-- [ ] Allow shelters to view received donations
+- [ OK ] Allow shelters to view received donations
 - [ ] Change profile printing (use boxed_list())
 
 ## Bugs

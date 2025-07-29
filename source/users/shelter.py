@@ -101,6 +101,15 @@ class Shelter(User):
 
         return {greatest_donor: greatest_total}
 
+    def donations_list(self) -> list[str]:
+        donations_info: list[str] = []
+        for donor, donation in self.donations.items():
+            donations_info.append(f"> {donor} has donated a total of US${donation:.2f}.")
+
+        donations_info.append("")
+        donations_info.append(f"TOTAL: US${self.total_donations():.2f}")
+        return donations_info
+
     def print_user_profile(self) -> None:
         super().print_user_profile()
         self.print_allowed_pets()
