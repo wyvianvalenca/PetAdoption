@@ -113,3 +113,8 @@ class Shelter(User):
     def print_user_profile(self) -> None:
         super().print_user_profile()
         self.print_allowed_pets()
+
+    def profile_list(self) -> list[str]:
+        profile_info: list[str] = super().profile_list()
+        profile_info.append(f"> Accepted pets: {', '.join(self.pet_types)}.")
+        return profile_info

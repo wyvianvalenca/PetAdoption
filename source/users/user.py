@@ -43,3 +43,11 @@ class User:
         print(f"{self.name.upper()}")
         for field, data in self.user_profile.items():
             print(f"> {field.title()}: {data}")
+
+    def profile_list(self) -> list[str]:
+        profile_info: list[str] = [f"{self.name.upper()} (@{self.username})"]
+
+        for field, data in self.user_profile.items():
+            profile_info.append(f"> {field.title()}: {data}")
+
+        return profile_info

@@ -206,7 +206,7 @@ def update_user_profile(user: User) -> None:
     print("\nLet's Update your profile!", 
           "Here's your current information:")
 
-    user.print_user_profile()
+    print(boxed_list("current profile", user.profile_list()))
 
     print("If you don't want to update something, just leave it blank.\n")
 
@@ -216,11 +216,15 @@ def update_user_profile(user: User) -> None:
         if new_data:
             new_profile[field] = new_data
 
+    print()
     print(user.update_profile(new_profile))
 
-    print("\nGreat! Here's your new profile!\n")
+    print("\nGreat! Here's your new profile!")
+    print(boxed_list("new profile", user.profile_list()))
 
-    user.print_user_profile()
+    user_pause()
+
+    return None
 
 def create_post(user: User) -> None:
     print("\nLet's add a post! First, choose the type.")
@@ -230,7 +234,6 @@ def create_post(user: User) -> None:
     while post_type not in user.allowed_posts:
         print("\nInvalid Option. Try Again.")
         post_type = input("> Choose a type: ")
-
 
     print(f"\nLet's write a {post_type}! Please type your post's info\n")
     title = input("Title: ")
@@ -330,9 +333,7 @@ def respond_application(adopters: dict[str, Adopter], shelter: Shelter) -> bool:
 
     profile = input(f"\n> Do you wish to see {form.applicant}'s profile? [y/n] ")
     if profile == "y":
-        print()
-        applicant.print_user_profile()
-        print()
+        print(boxed_list("applicant's profile", applicant.profile_list()))
 
     while True:
         result = input(f"> Do you approve {form.applicant}'s application? [y/n/q] ")

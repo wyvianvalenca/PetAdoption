@@ -95,6 +95,7 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 ### 25-07-29
 - Adopters can donate to shelters
 - Shelters can view their received donations
+- Profile information is now printed inside a pretty box
 
 
 # TO-DO
@@ -116,15 +117,19 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 - [ OK ] Allow liking posts
 - [ OK ] Allow users to donate to shelters
 - [ OK ] Allow shelters to view received donations
-- [ ] Change profile printing (use boxed_list())
+- [ OK ] Change profile printing (use boxed_list())
 
 ## Bugs
-- [ ] Pet status AVAILABLE FOR ADOPTION but no aplication form registered
+- [ KNOWN ] Pet status AVAILABLE FOR ADOPTION but no aplication form registered
     > ask for questions immediatly after changing status to AVAILABLE FOR ADOPTION
     > OR register standard form for all pets
-- [ ] No system feedback after responding a application (success or failure messages)
+- [ KNOWN ] No system feedback after responding a application (success or failure messages)
+- [ KNOWN ] Duplicates in filter's options
 
 ## Extra (ideas)
+- [ ] Allow choosing post type with code instead of typing
+- [ ] Allow choosing pet filters with code instead of typing
+- [ ] Document code
 - [ ] Filter events
 - [ ] Order events by date
 - [ ] Filter social posts
