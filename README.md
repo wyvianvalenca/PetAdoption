@@ -121,7 +121,7 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 
 ## Bugs
 - [ FIXED ] Pet status AVAILABLE FOR ADOPTION but no aplication form registered
-- [ KNOWN ] No system feedback after responding a application (success or failure messages)
+- [ FIXED ] No system feedback after responding a application (success or failure messages)
 - [ KNOWN ] Duplicates in filter's options
 
 ## Extra (ideas)

@@ -296,14 +296,16 @@ def view_feed(message: str, posts: list[Post], user: User) -> None:
 
 def deny_other_applications(apps: list[Form], accepted: int) -> None:
     for index, app in enumerate(apps):
-        if index != accepted and app.status == "submitted":
-            feedback: str = input(f"\n> Give {app.applicant} a feedback as to why their application was denied: ")
-            print()
+        if index != accepted:
+            if app.status == "submitted":
+                feedback: str = input(f"\n> Give {app.applicant} a feedback as to why their application was denied: ")
 
-            if app.deny(feedback):
-                print("[OK] Application denied.")
+                print()
+                _ = app.deny(feedback)
+
+                print("[OK] Application denied.\n")
             else:
-                print(f"[FAIL] This application's status is already {app.status}")
+                print(f"\n[FAIL] Application already processed.\n")
 
     return None
 
@@ -338,14 +340,17 @@ def respond_application(adopters: dict[str, Adopter], shelter: Shelter) -> bool:
         print(boxed_list("applicant's profile", applicant.profile_list()))
 
     while True:
-        result = input(f"> Do you approve {form.applicant}'s application? [y/n/q] ")
+        result = input(f"\n> Do you approve {form.applicant}'s application? [y/n/q] ")
         if result == "y":
             if form.approve():
                 pet.update_status()
                 pet.tutor = applicant
-                print(f"[OK] Application approved! {form.applicant} is {form.pet}'s new tutor")
+                print(f"\n[OK] Application approved! {form.applicant} is {form.pet.title()}'s new tutor.")
 
                 deny_other_applications(pets_apps, app_index)
+
+            else:
+                print("\n[FAIL] Application already processed.\n")
 
             break
 
@@ -357,6 +362,8 @@ def respond_application(adopters: dict[str, Adopter], shelter: Shelter) -> bool:
             break
 
         print("\nInvalid option. Try again.\n")
+
+    user_pause()
 
     return True
 
