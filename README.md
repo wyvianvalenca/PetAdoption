@@ -97,6 +97,10 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 - Shelters can view their received donations
 - Profile information is now printed inside a pretty box
 
+### 25-08-02
+- Fixed bug: no form for available pets
+- Fixed bug: no system feedback after trying to process a form that's already been processed
+
 
 # TO-DO
 
