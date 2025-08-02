@@ -141,11 +141,13 @@ _ = pet1.add_question("Can you train her?",
                        "Yes")
 
 _ = pet1.apply_to_adopt(ad1, {
+    "Are you sure you want to adopt Becky?": "Yes",
     "How many walks can you take her on everyday?":"2 or more",
     "Can you train her?":"Yes"
 })
 
 _ = pet1.apply_to_adopt(ad2, {
+    "Are you sure you want to adopt Becky?": "Yes",
     "How many walks can you take her on everyday?":"2 or more",
     "Can you train her?":"I don't know how, but will learn"
 })

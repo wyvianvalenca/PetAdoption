@@ -120,9 +120,7 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 - [ OK ] Change profile printing (use boxed_list())
 
 ## Bugs
-- [ KNOWN ] Pet status AVAILABLE FOR ADOPTION but no aplication form registered
-    > ask for questions immediatly after changing status to AVAILABLE FOR ADOPTION
-    > OR register standard form for all pets
+- [ FIXED ] Pet status AVAILABLE FOR ADOPTION but no aplication form registered
 - [ KNOWN ] No system feedback after responding a application (success or failure messages)
 - [ KNOWN ] Duplicates in filter's options
 

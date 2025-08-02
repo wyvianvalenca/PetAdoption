@@ -23,7 +23,9 @@ class Pet:
         self.description: str | None = None
 
         self._status: str = 'Rescued'
-        self.form_template: list[tuple[str, list[str], str]] = []
+        self.form_template: list[tuple[str, list[str], str]] = [
+            (f"Are you sure you want to adopt {self.name.title()}?", ["Yes", "No"], "Yes")
+        ]
         self.applications: list[Form] = []
         self.tutor: Adopter
 
