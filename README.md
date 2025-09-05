@@ -6,8 +6,8 @@ A system with classes for pets, shelters, and adopters, facilitating pet searche
 
 ## Clone the repository and change into the project folder
 ```bash
-git clone https://github.com/wyvianvalenca/pet-adoption-OO.git
-cd pet-adoption-OO
+git clone https://github.com/wyvianvalenca/PetAdoption.git
+cd PetAdoption
 ```
 
 ## Create and activate a Virtual Envoirement
@@ -24,7 +24,6 @@ pip install -r requirements.txt
 ## Run
 ```bash
 python app.py
-
 ```
 
 # Functional Requirements
