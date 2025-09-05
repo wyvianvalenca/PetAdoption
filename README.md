@@ -2,6 +2,30 @@
 
 A system with classes for pets, shelters, and adopters, facilitating pet searches, adoption processes, and shelter management.
 
+# Getting Started
+
+## Clone the repository and change into the project folder
+```bash
+git clone https://github.com/wyvianvalenca/pet-adoption-OO.git
+cd pet-adoption-OO
+```
+
+## Create and activate a Virtual Envoirement
+```
+python -m venv venv
+source venv/bin/activate
+```
+
+## Install the project dependencies
+```bash
+pip install -r requirements.txt
+```
+
+## Run
+```bash
+python app.py
+
+```
 
 # Functional Requirements
 
